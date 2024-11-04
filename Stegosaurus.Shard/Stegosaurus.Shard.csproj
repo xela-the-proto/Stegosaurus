@@ -11,8 +11,5 @@
         <PackageReference Include="Docker.DotNet" Version="3.125.15" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0"/>
     </ItemGroup>
-
-    <ItemGroup>
-      <Content Include="obj\Debug\net8.0\Stegosaurus.Shard.sourcelink.json" />
-    </ItemGroup>
+    
 </Project>
