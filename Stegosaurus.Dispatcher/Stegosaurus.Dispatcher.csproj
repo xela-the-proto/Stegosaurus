@@ -8,4 +8,18 @@
         <UseWPF>true</UseWPF>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Compile Include="obj\Debug\net8.0-windows\Stegosaurus.Dispatcher_4r3u0jzb_wpftmp.AssemblyInfo.cs" />
+      <Compile Include="obj\Debug\net8.0-windows\Stegosaurus.Dispatcher_4r3u0jzb_wpftmp.GlobalUsings.g.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="obj\Debug\net8.0-windows\MainWindow.baml" />
+      <Content Include="obj\Debug\net8.0-windows\Stegosaurus.Dispatcher.sourcelink.json" />
+      <Content Include="obj\Debug\net8.0-windows\Stegosaurus.Dispatcher_4r3u0jzb_wpftmp.AssemblyInfoInputs.cache" />
+      <Content Include="obj\Debug\net8.0-windows\Stegosaurus.Dispatcher_4r3u0jzb_wpftmp.assets.cache" />
+      <Content Include="obj\Debug\net8.0-windows\Stegosaurus.Dispatcher_4r3u0jzb_wpftmp.GeneratedMSBuildEditorConfig.editorconfig" />
+      <Content Include="obj\Debug\net8.0-windows\Stegosaurus.Dispatcher_4r3u0jzb_wpftmp.sourcelink.json" />
+    </ItemGroup>
+
 </Project>
