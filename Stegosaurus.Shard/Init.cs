@@ -12,7 +12,6 @@ public class Init
     public static DockerClient client = new DockerClientConfiguration().CreateClient();
     public Task Local()
     {
-        string path = "";
         if (!new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
                                + @"\StegoShard").Exists)
         {
