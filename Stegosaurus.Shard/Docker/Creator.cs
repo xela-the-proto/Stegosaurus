@@ -6,10 +6,8 @@ namespace Stegosaurus.Shard.Docker;
 
 public class Creator
 {
-    public async Task CreateContainer(byte[] obj)
+    public async Task CreateContainer(Container container)
     {
-        Deserializer deserializer = new Deserializer();
-        Container container = (Container)deserializer.AssesType(obj);
         JsonManager jsonManager = new JsonManager();
         var client = Init.client;
         var logger = Worker._logger;

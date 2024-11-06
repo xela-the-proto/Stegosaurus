@@ -26,7 +26,7 @@ public partial class MainWindow : Window
             byte[] bytes = new byte[1024];
             IPHostEntry host = Dns.GetHostEntry("localhost");
             IPAddress ipAddress = host.AddressList[0];
-            IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);
+            IPEndPoint remoteEP = new IPEndPoint(ipAddress, 53871);
 
             // Create a TCP/IP  socket.
             Socket sender = new Socket(ipAddress.AddressFamily,
@@ -42,7 +42,7 @@ public partial class MainWindow : Window
                     sender.RemoteEndPoint.ToString());
 
                 // Encode the data string into a byte array.
-                byte[] msg = Encoding.ASCII.GetBytes("{\n    \"request_type\":\"creation\",\n    \"id\":\"81b043a3d64169dab949461b9ef48b444891a387f02e4c9c9160ab3bf9bada66\",\n    \"name\":\"cde\",\n    \"image\":\"ghcr.io/pterodactyl/yolks:alpine\"\n}");
+                byte[] msg = Encoding.ASCII.GetBytes("{\n    \"request_type\":\"creation\",\n    \"id\":\"81b043a3d64169dab949461b9ef48b444891a387f02e4c9c9160ab3bf9bada66\",\n    \"name\":\"send\",\n    \"image\":\"ghcr.io/pterodactyl/yolks:debian\"\n}");
 
                 // Send the data through the socket.
                 int bytesSent = sender.Send(msg);
