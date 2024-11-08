@@ -1,59 +1,52 @@
 ﻿using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using Stegosaurus.Shard.Docker;
 using Stegosaurus.Shard.Json;
 
 namespace Stegosaurus.Shard.Net;
-/*
-public class SocketHandler
+
+public class SocketHandlerRewrite
 {
-    public async Task SocketOpener()
+    public async Task<TcpClient> Open(IPAddress address,IPEndPoint local)
     {
-        IPHostEntry host = Dns.GetHostEntry("localhost");
-        IPAddress ipAddress = host.AddressList[0];
-        IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 53871);
-        int i = 1;
-        while (!Worker.SocketListener.IsBound && !Worker.SocketListener.Connected)
+        var buffer = new byte[1_024];
+        TcpListener socket = new TcpListener(local);
+        
+        while (!socket.Server.IsBound)
         {
             try
             {
-                Worker._logger.LogWarning("Trying for socket connection...");
-                Worker.SocketListener.Bind(localEndPoint);
-                Worker.SocketListener.Connect(localEndPoint);
-                Worker.SocketListener.Listen();
-                await Worker.SocketListener.AcceptAsync();
+                socket.Start();
+
+                var handler = await socket.AcceptTcpClientAsync();
+                await using NetworkStream stream = handler.GetStream();
+                int received = await stream.ReadAsync(buffer);
+                var message = Encoding.UTF8.GetString(buffer, 0, received);
+                Worker._logger.LogInformation(message);
+                return handler;
             }
             catch (Exception e)
             {
-                Worker._logger.LogCritical(e.Message);
-                /*
-                Worker._logger.LogError(@"failed to connect to {ip}:{port} {i} times",localEndPoint.Address,localEndPoint.Port, i);
-                i++;
-                
+                Console.WriteLine(e);
+                throw;  
             }
-            
-            
-            Thread.Sleep(500);
         }
-        
-        
-        Dispatcher().Wait(60000);
-        if (!Dispatcher().IsCompleted)
-        {
-            throw new TimeoutException("Failed to crete container in less than 60 seconds!");
-        }
+
+        return null;
     }
 
-    async Task Dispatcher()
-    { 
-        byte[] bytes = new byte[1024];
+    public async Task AwaitMessage(TcpClient socket)
+    {
+        byte[] bytes = new byte[1_024];
         Deserializer deserializer = new Deserializer();
-        while (true)
+        NetworkStream stream = socket.GetStream();
+        while (socket.Client.IsBound)
         {
             try
             {
                 Worker._logger.LogInformation("Awaiting new socket message");
-                Worker.SocketListener.Receive(bytes);
+                await stream.ReadAsync(bytes);
                 //check if we got an empty payload
                 bool hasAllZeroes = bytes.All(singleByte => singleByte == 0);
                 if (!hasAllZeroes)
@@ -78,11 +71,10 @@ public class SocketHandler
             catch (SocketException e)
             {
                 Worker._logger.LogCritical("Socket closed!");
-                Worker.SocketListener.Shutdown(SocketShutdown.Both);
+                socket.Client.Shutdown(SocketShutdown.Both);
                 throw;
             }
             Thread.Sleep(500);
         }
     }
 }
-*/

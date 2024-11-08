@@ -7,7 +7,7 @@ public class Finder
 {
     public async Task Find(Container container, string key_filter, string value_filter, bool get_offline = true)
     {
-        var client = Init.client;
+        var client = Worker.client;
         var currentContainers = await client.Containers.ListContainersAsync(
             new ContainersListParameters()
             {

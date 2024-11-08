@@ -10,11 +10,10 @@ public class Creator
     public async Task CreateContainer(Container container)
     {
         JsonManager jsonManager = new JsonManager();
-        var client = Init.client;
+        var client = Worker.client;
         var logger = Worker._logger;
 
-        if (SocketExtensions.IsConnected(Worker.SocketListener))
-        {
+        
             logger.LogInformation("Downloading image " + container.image);
             //pull image from the docker repo
             await client.Images.CreateImageAsync(
@@ -70,7 +69,7 @@ public class Creator
             { 
                 logger.LogWarning("Container exists!");
             }
-        }
+        
         else
         {
             throw new TimeoutException("Socket failed to connect!");

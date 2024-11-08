@@ -6,10 +6,9 @@ namespace Stegosaurus.Shard.Data;
 public class JsonManager
 {
 
-    private static string ROOT = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\StegoShard";
+    public static string ROOT = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\StegoShard";
     public async Task SaveContainerAsync(Container ToSerialize)
     {
-        await Init();
         if (!File.Exists(ROOT + @"\containers\" + ToSerialize.id + ".json"))
         {
             using (StreamWriter file = File.CreateText(ROOT + @"\containers\" + ToSerialize.id + ".json"))
@@ -19,13 +18,5 @@ public class JsonManager
             }
         }
         
-    }
-
-    protected async Task Init()
-    {
-        if (!Directory.Exists(ROOT + @"\containers"))
-        {
-            Directory.CreateDirectory(ROOT + @"\containers");
-        }
     }
 }
