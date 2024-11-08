@@ -10,7 +10,9 @@ public class Worker : BackgroundService
 {
     public static ILogger<Worker> _logger;
     
-    
+    public static IPHostEntry host = Dns.GetHostEntry("localhost");
+    public static IPAddress ipAddress = host.AddressList[0];
+    public static Socket SocketListener = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
     public Worker(ILogger<Worker> logger)
     {
         _logger = logger;
