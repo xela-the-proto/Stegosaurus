@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using RabbitMQ.Client;
 
 namespace Stegosaurus.Dispatcher;
 
@@ -26,7 +27,9 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         Application.Current.MainWindow.Closing += Window_Closed;
+        btn_connect.Click += myButton_Click;
 
+        /*
         while (true)
         {
             try
@@ -34,7 +37,7 @@ public partial class MainWindow : Window
             /*
             byte[] bytes = new byte[1024];
             // Connect the socket to the remote endpoint. Catch any errors.
-            
+
                 if (!sender.Connected)
                 {
                     sender.Connect(remoteEP);
@@ -48,7 +51,7 @@ public partial class MainWindow : Window
 
                 // Send the data through the socket.
                 int bytesSent = sender.Send(msg);
-                */
+
                 var buffer = new byte[1_024];
 
                 socket.Connect(remoteEP);
@@ -73,8 +76,28 @@ public partial class MainWindow : Window
             }
             Thread.Sleep(1000);
         }
+        */
     }
-    
+    async void myButton_Click(object sender, RoutedEventArgs e)
+    {
+        var factory = new ConnectionFactory
+        {
+            HostName = "localhost"
+        };
+        await using var connection = await factory.CreateConnectionAsync();
+        await using var channel = await connection.CreateChannelAsync();
+
+        await channel.QueueDeclareAsync(queue: "Docker-container", durable: false, exclusive: false, autoDelete: false,
+            arguments: null);
+
+        const string message = "Hello World!";
+        var body = Encoding.UTF8.GetBytes(message);
+
+        await channel.BasicPublishAsync(exchange: string.Empty, routingKey: "hello", body: body);
+        Console.WriteLine($" [x] Sent {message}");
+
+        Console.WriteLine(" Press [enter] to exit.");
+    }
     private void Window_Closed(object sender, EventArgs e)
     {
     }

@@ -20,19 +20,23 @@ public class Worker : BackgroundService
         SocketHandlerRewrite handler = new SocketHandlerRewrite();
         Init init = new Init();
         await init.Local();
+        /*
         var shardConfig = init.Config().Result;
         IPHostEntry host = Dns.GetHostEntry(shardConfig.ip);
         IPAddress ipAddress = host.AddressList[0];
         IPEndPoint endPoint = new IPEndPoint(ipAddress, shardConfig.port);
         var socket = await handler.Open(ipAddress,endPoint);
-        if ()
+        if (socket == null)
         {
             throw new InvalidDataException("Socket returned null!");
         }
+        */
         while (!stoppingToken.IsCancellationRequested)
         {
+            RabbitHandler handler2 = new RabbitHandler();
+            handler2.Receive();
             //Main entrypoint to code
-            await handler.AwaitMessage(socket);
+            //await handler.AwaitMessage(socket);
             await Task.Delay(500, stoppingToken);
         }
     }
