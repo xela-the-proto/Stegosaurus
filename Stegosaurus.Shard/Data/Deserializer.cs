@@ -8,10 +8,10 @@ namespace Stegosaurus.Shard.Json;
 
 public class Deserializer
 {
-    public async Task<object> AssessType(byte[] array, bool deserialize)
+    public async Task<object> AssessType(string msg, bool deserialize)
     {
         
-        object? cleaned_obj = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(array));
+        object? cleaned_obj = JsonConvert.DeserializeObject(msg);
         if (cleaned_obj is null)
         {
             throw new NullReferenceException();

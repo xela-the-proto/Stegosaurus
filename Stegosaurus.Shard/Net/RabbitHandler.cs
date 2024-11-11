@@ -6,7 +6,7 @@ namespace Stegosaurus.Shard.Net;
 
 public class RabbitHandler
 {
-    public async Task Receive()
+    public async Task<byte[]> Receive()
     {
         ConnectionFactory factory = new ConnectionFactory
         {
@@ -16,8 +16,8 @@ public class RabbitHandler
         await using var connection = await factory.CreateConnectionAsync();
         await using var channel = await connection.CreateChannelAsync();
         
-        await channel.QueueDeclareAsync(queue: "Docker-container", durable: false, exclusive: false, autoDelete: false, arguments: null);
-        Worker._logger.LogInformation("Waiting for messages...");
+        await channel.QueueDeclareAsync(queue: "Dispatcher", durable: false, exclusive: false, autoDelete: false, arguments: null);
+        Worker._logger.LogInformation("[" + DateTime.Now +  "] Waiting for messages...");
         
         var consumer = new AsyncEventingBasicConsumer(channel);
         consumer.ReceivedAsync += (model, ea) =>
@@ -27,6 +27,14 @@ public class RabbitHandler
             Worker._logger.LogInformation(message);
             return Task.CompletedTask;
         };
-        await channel.BasicConsumeAsync("Docker-container",autoAck: true, consumer: consumer);
+        
+        await channel.BasicConsumeAsync("Dispatcher",autoAck: true, consumer: consumer);
+        return null;
+    }
+
+
+    void Received(object sender, BasicDeliverEventArgs e)
+    {
+        
     }
 }

@@ -17,7 +17,7 @@ public class Worker : BackgroundService
     
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        SocketHandlerRewrite handler = new SocketHandlerRewrite();
+        RabbitHandler handler2 = new RabbitHandler();
         Init init = new Init();
         await init.Local();
         /*
@@ -33,8 +33,7 @@ public class Worker : BackgroundService
         */
         while (!stoppingToken.IsCancellationRequested)
         {
-            RabbitHandler handler2 = new RabbitHandler();
-            handler2.Receive();
+            var message = await handler2.Receive();
             //Main entrypoint to code
             //await handler.AwaitMessage(socket);
             await Task.Delay(500, stoppingToken);

@@ -87,13 +87,15 @@ public partial class MainWindow : Window
         await using var connection = await factory.CreateConnectionAsync();
         await using var channel = await connection.CreateChannelAsync();
 
-        await channel.QueueDeclareAsync(queue: "Docker-container", durable: false, exclusive: false, autoDelete: false,
+        await channel.QueueDeclareAsync(queue: "Dispatcher", durable: false, exclusive: false, autoDelete: false,
             arguments: null);
 
         const string message = "Hello World!";
-        var body = Encoding.UTF8.GetBytes(message);
+        string msg = "{\n    \"request_type\":\"creation\",\n    \"id\":\"81b043a3d64169dab949461b9ef48b444891a387f02e4c9c9160ab3bf9bada66\",\n    \"name\":\"send\",\n    \"image\":\"ghcr.io/pterodactyl/yolks:debian\"\n}";
 
-        await channel.BasicPublishAsync(exchange: string.Empty, routingKey: "hello", body: body);
+        var body = Encoding.UTF8.GetBytes(msg);
+
+        await channel.BasicPublishAsync(exchange: string.Empty, routingKey: "Dispatcher", body: body);
         Console.WriteLine($" [x] Sent {message}");
 
         Console.WriteLine(" Press [enter] to exit.");
