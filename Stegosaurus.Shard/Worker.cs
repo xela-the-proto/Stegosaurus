@@ -16,36 +16,30 @@ public class Worker : BackgroundService
     {
         _logger = logger;
     }
-    
+    /// <summary>
+    /// Main entrypoint, define the handler for rabbitmq and initialize
+    /// all the necessary files for configurations ecc.
+    /// After that create the connection and start the queue
+    /// </summary>
+    /// <param name="stoppingToken"></param>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         RabbitHandler handler = new RabbitHandler();
         Init init = new Init();
+        
+        await init.Local();
+        var config = await init.Config();
         ConnectionFactory factory = new ConnectionFactory
         {
-            HostName = "localhost"
+            HostName = config.ip,
         };
         using var connection = await factory.CreateConnectionAsync();
         using var channel = await connection.CreateChannelAsync();
-        //RunDispatchListener dispatchListener = handler.Receive;
-        await init.Local();
-        /*
-        var shardConfig = init.Config().Result;
-        IPHostEntry host = Dns.GetHostEntry(shardConfig.ip);
-        IPAddress ipAddress = host.AddressList[0];
-        IPEndPoint endPoint = new IPEndPoint(ipAddress, shardConfig.port);
-        var socket = await handler.Open(ipAddress,endPoint);
-        if (socket == null)
-        {
-            throw new InvalidDataException("Socket returned null!");
-        }
-        */
         while (!stoppingToken.IsCancellationRequested)
         {
-            var message = await handler.Receive(channel);
-            //Main entrypoint to code
-            //await handler.AwaitMessage(socket);
-            await Task.Delay(100, stoppingToken);
+            //TODO:MORE CHANNELS HANDLING AT ONCE?
+            var message = await handler.Receive(channel, "Dispatcher");
+            await Task.Delay(0, stoppingToken);
         }
     }
 }

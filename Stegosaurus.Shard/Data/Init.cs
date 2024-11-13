@@ -7,6 +7,9 @@ namespace Stegosaurus.Shard;
 using Docker;
 public class Init
 {
+    /// <summary>
+    /// Check and if needed creates all the needed directories
+    /// </summary>
     public async Task Local()
     {
         if (!new DirectoryInfo(JsonManager.ROOT).Exists)
@@ -26,6 +29,10 @@ public class Init
         return;
     }
 
+    /// <summary>
+    /// creates the config files if they don't exist, else returns them
+    /// </summary>
+    /// <returns></returns>
     public async Task<ShardConfig> Config()
     {
         JsonSerializer serializer = new JsonSerializer();
@@ -33,8 +40,7 @@ public class Init
         {
             ShardConfig shardConfig = new ShardConfig
             {
-                ip = "localhost",
-                port = 53871
+                ip = "localhost"
             };
             using (StreamWriter stream = File.CreateText(JsonManager.ROOT + @"\configs\shard.conf"))
             {

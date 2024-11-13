@@ -7,9 +7,16 @@ namespace Stegosaurus.Shard.Docker;
 
 public class Creator
 {
+    
+    /// <summary>
+    /// Downloads the image of the container and then creates it, also checks if it exists.
+    /// </summary>
+    /// <param name="container"></param>
+    /// <exception cref="TimeoutException"></exception>
     public async Task CreateContainer(Container container)
     {
         JsonManager jsonManager = new JsonManager();
+        Finder finder = new Finder();
         var client = Worker.client;
         var logger = Worker._logger;
 
@@ -30,18 +37,7 @@ public class Creator
                 new Progress<JSONMessage>());
 
             //gets the containers that match the name for checks
-            var currentContainers = await client.Containers.ListContainersAsync(
-                new ContainersListParameters(){
-                    All = true,
-                    Filters = new Dictionary<string, IDictionary<string, bool>>
-                    {
-                        {
-                            "name", new Dictionary<string, bool>
-                            {
-                                [container.name] = true
-                            }
-                        }
-                    }});
+            var currentContainers = finder.Find("name",container.name).Result;
             //if we dont have any containers then we create
             if (!currentContainers.Any())
             {
@@ -69,10 +65,5 @@ public class Creator
             { 
                 logger.LogWarning("Container exists!");
             }
-        
-        else
-        {
-            throw new TimeoutException("Socket failed to connect!");
-        }
     }
 }

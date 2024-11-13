@@ -5,7 +5,14 @@ namespace Stegosaurus.Shard.Docker;
 
 public class Finder
 {
-    public async Task Find(Container container, string key_filter, string value_filter, bool get_offline = true)
+    /// <summary>
+    /// Kind of a "helper" to find containers
+    /// </summary>
+    /// <param name="container"></param>
+    /// <param name="key_filter"></param>
+    /// <param name="value_filter"></param>
+    /// <param name="get_offline"></param>
+    public async Task<IList<ContainerListResponse>> Find(string key_filter, string value_filter, bool get_offline = true)
     {
         var client = Worker.client;
         var currentContainers = await client.Containers.ListContainersAsync(
@@ -22,6 +29,7 @@ public class Finder
                     }
                 }
             });
+        return currentContainers;
     }
 
 }

@@ -1,7 +1,9 @@
 ﻿namespace Stegosaurus.Shard.Json;
 
+/// <summary>
+/// JSON cookie cutter class for config
+/// </summary>
 public class ShardConfig
 {
     public string ip = "localhost";
-    public int port = 53871;
 }

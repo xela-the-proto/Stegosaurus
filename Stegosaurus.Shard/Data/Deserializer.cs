@@ -8,6 +8,13 @@ namespace Stegosaurus.Shard.Json;
 
 public class Deserializer
 {
+    /// <summary>
+    /// Assess the type of class we got from a message and returns it
+    /// </summary>
+    /// <param name="msg"></param>
+    /// <param name="deserialize"></param>
+    /// <returns></returns>
+    /// <exception cref="NullReferenceException"></exception>
     public async Task<object> AssessType(string msg, bool deserialize)
     {
         
@@ -24,7 +31,7 @@ public class Deserializer
             switch (request)
             {
                 case "creation":
-                    Worker._logger.LogWarning("Found type id for jobject " + cleaned_json.ToString());
+                    Worker._logger.LogWarning("Found type id for jobject " + cleaned_json.First);
                     Container clean_class = this.Container(cleaned_json);
                     return clean_class;
                 case "shutdown":
@@ -40,7 +47,11 @@ public class Deserializer
         return null;
     }
     
-    
+    /// <summary>
+    /// single use class to convert the jobject to the actual class 
+    /// </summary>
+    /// <param name="jObject"></param>
+    /// <returns></returns>
     private Container Container(JObject jObject)
     {
         Json.Container container = new Json.Container();

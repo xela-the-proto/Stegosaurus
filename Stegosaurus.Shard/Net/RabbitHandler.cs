@@ -7,15 +7,21 @@ namespace Stegosaurus.Shard.Net;
 public class RabbitHandler
 {
 
-    public async Task<byte[]> Receive(IChannel channel)
+    public async Task<byte[]> Receive(IChannel channel,string queue)
     {
-        await channel.QueueDeclareAsync(queue: "Dispatcher", durable: false, exclusive: false, autoDelete: false, arguments: null);
-        Worker._logger.LogInformation("[" + DateTime.Now +  "] Waiting for messages...");
+        await channel.QueueDeclareAsync(queue: queue, durable: false, exclusive: false, autoDelete: false, arguments: null);
         
+        Worker._logger.LogInformation("[" + DateTime.Now +  "] Waiting for messages on " + queue + " queue");
         
         var consumer = new AsyncEventingBasicConsumer(channel);
         consumer.ReceivedAsync += Received;
+        channel.BasicAcksAsync += (sender, @event) =>
+        {
+            Worker._logger.LogInformation("ACK");
+            return Task.CompletedTask;
+        };
         await channel.BasicConsumeAsync("Dispatcher",autoAck: true, consumer: consumer);
+        Thread.Sleep(5000);
         return null;
     }
 
