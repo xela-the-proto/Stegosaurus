@@ -6,7 +6,7 @@ namespace Stegosaurus.Shard.Net;
 
 public class Dispatcher
 {
-    async Task Dispatch(string msg)
+     public static async Task Dispatch(string msg)
     {
         Deserializer deserializer = new Deserializer();
             try

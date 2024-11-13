@@ -6,35 +6,31 @@ namespace Stegosaurus.Shard.Net;
 
 public class RabbitHandler
 {
-    public async Task<byte[]> Receive()
+
+    public async Task<byte[]> Receive(IChannel channel)
     {
-        ConnectionFactory factory = new ConnectionFactory
-        {
-            HostName = "localhost"
-            
-        };
-        await using var connection = await factory.CreateConnectionAsync();
-        await using var channel = await connection.CreateChannelAsync();
-        
         await channel.QueueDeclareAsync(queue: "Dispatcher", durable: false, exclusive: false, autoDelete: false, arguments: null);
         Worker._logger.LogInformation("[" + DateTime.Now +  "] Waiting for messages...");
         
-        var consumer = new AsyncEventingBasicConsumer(channel);
-        consumer.ReceivedAsync += (model, ea) =>
-        {
-            var body = ea.Body.ToArray();
-            var message = Encoding.UTF8.GetString(body);
-            Worker._logger.LogInformation(message);
-            return Task.CompletedTask;
-        };
         
+        var consumer = new AsyncEventingBasicConsumer(channel);
+        consumer.ReceivedAsync += Received;
         await channel.BasicConsumeAsync("Dispatcher",autoAck: true, consumer: consumer);
         return null;
     }
 
 
-    void Received(object sender, BasicDeliverEventArgs e)
+    Task Received(object sender, BasicDeliverEventArgs e)
     {
+        Dispatcher dispatcher = new Dispatcher();
+        var body = e.Body.ToArray();
+        var message = Encoding.UTF8.GetString(body); 
+        //TODO: HANDLE CONCURRENT CONTAINER CREATION AND DELETION
+        Task.WaitAll(Dispatcher.Dispatch(message));
+        Worker._logger.LogInformation(message);
         
+        return Task.CompletedTask;
     }
+    
+    
 }
