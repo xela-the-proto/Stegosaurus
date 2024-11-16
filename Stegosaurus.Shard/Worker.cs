@@ -31,7 +31,7 @@ public class Worker : BackgroundService
         var config = await init.Config();
         ConnectionFactory factory = new ConnectionFactory
         {
-            HostName = "127.0.0.1",
+            HostName = config.ip,
         };
         using var connection = await factory.CreateConnectionAsync();
         using var channel = await connection.CreateChannelAsync();
