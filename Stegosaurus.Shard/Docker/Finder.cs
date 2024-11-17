@@ -6,13 +6,13 @@ namespace Stegosaurus.Shard.Docker;
 public class Finder
 {
     /// <summary>
-    /// Kind of a "helper" to find containers
+    /// Kind of a "helper" to find containers, shoudl be filled like ("name",foo_name)
     /// </summary>
     /// <param name="container"></param>
     /// <param name="key_filter"></param>
     /// <param name="value_filter"></param>
     /// <param name="get_offline"></param>
-    public async Task<IList<ContainerListResponse>> Find(string key_filter, string value_filter, bool get_offline = true)
+    public async Task<IList<ContainerListResponse>> Find(string attribute, string attribute_to_match, bool get_offline = true)
     {
         var client = Worker.client;
         var currentContainers = await client.Containers.ListContainersAsync(
@@ -22,9 +22,9 @@ public class Finder
                 Filters = new Dictionary<string, IDictionary<string, bool>>
                 {
                     {
-                        key_filter, new Dictionary<string, bool>
+                        attribute, new Dictionary<string, bool>
                         {
-                            [value_filter] = true
+                            [attribute_to_match] = true
                         }
                     }
                 }

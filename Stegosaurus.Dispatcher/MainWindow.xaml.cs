@@ -1,5 +1,7 @@
-﻿using System.Net;
+﻿using System.IO;
+using System.Net;
 using System.Net.Sockets;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RabbitMQ.Client;
 
 namespace Stegosaurus.Dispatcher;
@@ -80,6 +84,7 @@ public partial class MainWindow : Window
     }
     async void myButton_Click(object sender, RoutedEventArgs e)
     {
+        string msg = "";
         var factory = new ConnectionFactory
         {
             HostName = "game.xela.space"
@@ -87,15 +92,21 @@ public partial class MainWindow : Window
         await using var connection = await factory.CreateConnectionAsync();
         await using var channel = await connection.CreateChannelAsync();
 
-        await channel.QueueDeclareAsync(queue: "Dispatcher", durable: false, exclusive: false, autoDelete: false,
+        await channel.QueueDeclareAsync(queue: "Creation", durable: false, exclusive: false, autoDelete: false,
             arguments: null);
 
         const string message = "Hello World!";
-        string msg = "{\n    \"request_type\":\"creation\",\n    \"id\":\"81b043a3d64169dab949461b9ef48b444891a387f02e4c9c9160ab3bf9bada66\",\n    \"name\":\"send\",\n    \"image\":\"ghcr.io/pterodactyl/yolks:debian\"\n}";
+        // read JSON directly from a file
+        using (StreamReader file = File.OpenText(@"C:\Users\thega\AppData\Roaming\StegoShard\request.json"))
+        using (JsonTextReader reader = new JsonTextReader(file))
+        {
+            JObject o2 = (JObject)JToken.ReadFrom(reader);
+            msg = o2.ToString();
+        }
 
         var body = Encoding.UTF8.GetBytes(msg);
 
-        await channel.BasicPublishAsync(exchange: string.Empty, routingKey: "Dispatcher", body: body);
+        await channel.BasicPublishAsync(exchange: string.Empty, routingKey: "Creation", body: body);
         Console.WriteLine($" [x] Sent {message}");
 
         Console.WriteLine(" Press [enter] to exit.");

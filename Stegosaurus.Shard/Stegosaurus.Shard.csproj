@@ -12,5 +12,31 @@
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0"/>
         <PackageReference Include="RabbitMQ.Client" Version="7.0.0" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="DockerFIles\minecraft\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="DockerFIles\minecraft\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Remove="DockerFIles\minecraft\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="DockerFIles\minecraft\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="DockerFIles\minecraft\banned-ips.json" />
+      <_ContentIncludedByDefault Remove="DockerFIles\minecraft\banned-players.json" />
+      <_ContentIncludedByDefault Remove="DockerFIles\minecraft\ops.json" />
+      <_ContentIncludedByDefault Remove="DockerFIles\minecraft\usercache.json" />
+      <_ContentIncludedByDefault Remove="DockerFIles\minecraft\whitelist.json" />
+      <_ContentIncludedByDefault Remove="DockerFIles\minecraft\world\advancements\ca27b1f4-f9dd-4f3f-8630-df42a1f1ca49.json" />
+      <_ContentIncludedByDefault Remove="DockerFIles\minecraft\world\stats\ca27b1f4-f9dd-4f3f-8630-df42a1f1ca49.json" />
+    </ItemGroup>
     
 </Project>

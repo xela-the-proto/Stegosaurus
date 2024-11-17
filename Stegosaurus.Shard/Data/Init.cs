@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32.SafeHandles;
+﻿using System.Runtime.InteropServices;
+using Microsoft.Win32.SafeHandles;
 using Newtonsoft.Json;
 using Stegosaurus.Shard.Data;
 using Stegosaurus.Shard.Json;
@@ -12,21 +13,43 @@ public class Init
     /// </summary>
     public async Task Local()
     {
-        if (!new DirectoryInfo(JsonManager.ROOT).Exists)
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            Directory.CreateDirectory(JsonManager.ROOT);
-        }
+            if (!new DirectoryInfo(JsonManager.WIN_ROOT).Exists)
+            {
+                Directory.CreateDirectory(JsonManager.WIN_ROOT);
+            }
 
-        if (!new DirectoryInfo(JsonManager.ROOT + @"\configs").Exists)
-        {
-            Directory.CreateDirectory(JsonManager.ROOT + @"\configs");
-        }
+            if (!new DirectoryInfo(JsonManager.WIN_ROOT + @"/configs").Exists)
+            {
+                Directory.CreateDirectory(JsonManager.WIN_ROOT + @"/configs");
+            }
 
-        if (!new DirectoryInfo(JsonManager.ROOT + @"\containers").Exists)
+            if (!new DirectoryInfo(JsonManager.WIN_ROOT + @"/containers").Exists)
+            {
+                Directory.CreateDirectory(JsonManager.WIN_ROOT + @"/containers");
+            }
+            return;
+        }if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            Directory.CreateDirectory(JsonManager.ROOT + @"\containers");
+            if (!new DirectoryInfo(JsonManager.LIN_ROOT).Exists)
+            {
+                Directory.CreateDirectory(JsonManager.LIN_ROOT);
+            }
+
+            if (!new DirectoryInfo(JsonManager.LIN_ROOT + @"/configs").Exists)
+            {
+                Directory.CreateDirectory(JsonManager.LIN_ROOT + @"/configs");
+            }
+
+            if (!new DirectoryInfo(JsonManager.LIN_ROOT + @"/containers").Exists)
+            {
+                Directory.CreateDirectory(JsonManager.LIN_ROOT + @"/containers");
+            }
+
+            return;
         }
-        return;
+        
     }
 
     /// <summary>
@@ -36,26 +59,54 @@ public class Init
     public async Task<ShardConfig> Config()
     {
         JsonSerializer serializer = new JsonSerializer();
-        if (!File.Exists(JsonManager.ROOT+ @"\configs\shard.conf"))
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            ShardConfig shardConfig = new ShardConfig
+            if (!File.Exists(JsonManager.WIN_ROOT+ @"/configs/shard.conf"))
             {
-                ip = "localhost"
-            };
-            using (StreamWriter stream = File.CreateText(JsonManager.ROOT + @"\configs\shard.conf"))
-            {
+                ShardConfig shardConfig = new ShardConfig
+                {
+                    ip = "localhost"
+                };
+                using (StreamWriter stream = File.CreateText(JsonManager.WIN_ROOT + @"/configs/shard.conf"))
+                {
                 
-                serializer.Serialize(stream,shardConfig);
-            }
+                    serializer.Serialize(stream,shardConfig);
+                }
 
-            return shardConfig;
-        }
-        else
-        {
-            using (StreamReader stream = File.OpenText(JsonManager.ROOT + @"\configs\shard.conf"))
+                return shardConfig;
+            }
+            else
             {
-                return (ShardConfig)serializer.Deserialize(stream,typeof(ShardConfig));
+                using (StreamReader stream = File.OpenText(JsonManager.WIN_ROOT + @"/configs/shard.conf"))
+                {
+                    return (ShardConfig)serializer.Deserialize(stream,typeof(ShardConfig));
+                }
+            }
+        }else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            if (!File.Exists(JsonManager.LIN_ROOT+ @"/configs/shard.conf"))
+            {
+                ShardConfig shardConfig = new ShardConfig
+                {
+                    ip = "localhost"
+                };
+                using (StreamWriter stream = File.CreateText(JsonManager.LIN_ROOT + @"/configs/shard.conf"))
+                {
+                
+                    serializer.Serialize(stream,shardConfig);
+                }
+
+                return shardConfig;
+            }
+            else
+            {
+                using (StreamReader stream = File.OpenText(JsonManager.LIN_ROOT + @"/configs/shard.conf"))
+                {
+                    return (ShardConfig)serializer.Deserialize(stream,typeof(ShardConfig));
+                }
             }
         }
+
+        return null;
     }
 }
