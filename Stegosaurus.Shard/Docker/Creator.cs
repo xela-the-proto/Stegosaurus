@@ -13,20 +13,18 @@ public class Creator
     /// </summary>
     /// <param name="container"></param>
     /// <exception cref="TimeoutException"></exception>
-    public async Task CreateContainer(Container container)
+    public async Task CreateContainer(CreateContainerParameters creator)
     {
+        Container container = new Container();
         JsonManager jsonManager = new JsonManager();
         Finder finder = new Finder();
         var client = Worker.client;
         var logger = Worker._logger;
-
-        
-            logger.LogInformation("Downloading image " + container.image);
             //pull image from the docker repo
             await client.Images.CreateImageAsync(
                 new ImagesCreateParameters
                 {
-                    FromImage = container.image,
+                    FromImage = creator.Image,
                 },
                 new AuthConfig
                 {
@@ -34,30 +32,17 @@ public class Creator
                     Username = null,
                     Password = null
                 },
-                new Progress<JSONMessage>());
+                new Progress<JSONMessage>(m => logger.LogInformation(m.ToString())));
 
             //gets the containers that match the name for checks
-            var currentContainers = finder.Find("name",container.name).Result;
+            var currentContainers = finder.Find("name",creator.Name).Result;
             //if we dont have any containers then we create
             if (!currentContainers.Any())
             {
-                logger.LogInformation("creating container with name " + container.name + " and image " + container.image);
-                CreateContainerResponse reply = await client.Containers.CreateContainerAsync(new CreateContainerParameters()
-                {
-                    Name = container.name,
-                    Image = container.image,
-                    Cmd = new List<string>
-                    {
-                        "/bin/bash",
-                        "-c",
-                        "sudo apt install snapd"
-                    },
-                    HostConfig = new HostConfig()
-                    {
-                        DNS = new[] { "8.8.8.8", "8.8.4.4" }
-                    }
-                
-                });
+                logger.LogInformation("creating container with name " + creator.Name + " and image " + creator.Image);
+                CreateContainerResponse reply = await client.Containers.CreateContainerAsync(creator);
+                container.name = creator.Name;
+                container.image = creator.Image;
                 container.id = reply.ID;
                 jsonManager.SaveContainerAsync(container);
                 //check if the same container exists

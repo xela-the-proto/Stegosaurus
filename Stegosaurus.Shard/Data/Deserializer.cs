@@ -1,6 +1,7 @@
 ﻿using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+using Docker.DotNet.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -15,24 +16,22 @@ public class Deserializer
     /// <param name="deserialize"></param>
     /// <returns></returns>
     /// <exception cref="NullReferenceException"></exception>
-    public async Task<object> AssessType(string msg, bool deserialize)
+    public async Task<object> AssessType(Packet packet)
     {
-        
-        object? cleaned_obj = JsonConvert.DeserializeObject(msg);
+        string request = packet.message;
+        object? cleaned_obj = JsonConvert.DeserializeObject(packet.data);
         if (cleaned_obj is null)
         {
             throw new NullReferenceException();
         }
         JObject cleaned_json = JObject.Parse(JsonConvert.SerializeObject(cleaned_obj));
         
-        string request = cleaned_json["request_type"].ToString().Normalize();
-        if (true)
-        {
+        
             switch (request)
             {
-                case "creation":
+                case "Creation":
                     Worker._logger.LogWarning("Found type id for jobject " + cleaned_json.First);
-                    Container clean_class = this.Container(cleaned_json);
+                    CreateContainerParameters clean_class = this._creation(cleaned_json);
                     return clean_class;
                 case "shutdown":
                     Environment.Exit(1);
@@ -42,7 +41,7 @@ public class Deserializer
                     Environment.Exit(2);
                     break;
             }
-        }
+        
 
         return null;
     }
@@ -52,7 +51,7 @@ public class Deserializer
     /// </summary>
     /// <param name="jObject"></param>
     /// <returns></returns>
-    private Container Container(JObject jObject)
+    private Container _container(JObject jObject)
     {
         Json.Container container = new Json.Container();
         if (!jObject.ContainsKey("id"))
@@ -63,6 +62,14 @@ public class Deserializer
         container.image = jObject["image"].ToString().Normalize();
 
         return container;
+    }
+
+    public CreateContainerParameters _creation(JObject jObject)
+    {
+        CreateContainerParameters creation = jObject.ToObject<CreateContainerParameters>();
+        //i ahev no clue why ti doesnt grab the name
+        creation.Name = (string)jObject["Name"];
+        return creation;
     }
 
 }

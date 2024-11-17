@@ -1,6 +1,8 @@
 using System.Net;
 using System.Net.Sockets;
 using Docker.DotNet;
+using Docker.DotNet.Models;
+using Newtonsoft.Json;
 using RabbitMQ.Client;
 using Stegosaurus.Shard.Docker;
 using Stegosaurus.Shard.Net;
@@ -24,8 +26,43 @@ public class Worker : BackgroundService
     /// <param name="stoppingToken"></param>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        var parameters = new CreateContainerParameters()
+        {
+
+            HostConfig = new HostConfig
+            {
+                PortBindings = new Dictionary<string, IList<PortBinding>>
+                {
+                    {
+                        "25565", new List<PortBinding>
+                        {
+                            new PortBinding { HostIP = "0.0.0.0", HostPort = "25565" }
+                        }
+                    }
+                }
+            },
+            ExposedPorts = new Dictionary<string, EmptyStruct>()
+            {
+                {
+                    "80", new EmptyStruct()
+                }
+            },
+        };
+        using (StreamWriter file = File.CreateText(@"C:\Users\thega\AppData\Roaming\StegoShard\full.json"))
+        {
+            JsonSerializer serializer = new JsonSerializer();
+            serializer.Serialize(file, parameters);
+        }
+        
         RabbitHandler handler = new RabbitHandler();
         Init init = new Init();
+        List<string> queues = new List<string>
+        
+        {
+            "Creation",
+            "Deletion"
+        };
+        
         
         await init.Local();
         var config = await init.Config();
@@ -38,7 +75,7 @@ public class Worker : BackgroundService
         while (!stoppingToken.IsCancellationRequested)
         {
             //TODO:MORE CHANNELS HANDLING AT ONCE?
-            var message = await handler.Receive(channel, "Dispatcher");
+            var message = await handler.Receive(channel, queues);
             await Task.Delay(0, stoppingToken);
         }
     }

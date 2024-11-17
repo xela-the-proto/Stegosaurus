@@ -1,0 +1,17 @@
+﻿version: '3.8'
+
+services:
+  minecraft:
+    image: openjdk:21-jdk
+    container_name: minecraft-server2
+    working_dir: /minecraft
+    ports:
+      - "25566:25565"
+    volumes:
+      - ./minecraft:/minecraft
+    environment:
+      - EULA=true
+    entrypoint: >
+      sh -c "curl -o /minecraft/server.jar 
+      https://piston-data.mojang.com/v1/objects/45810d238246d90e811d896f87b14695b7fb6839/server.jar 
+      && java -Xmx1024M -Xms1024M -jar /minecraft/server.jar nogui"
