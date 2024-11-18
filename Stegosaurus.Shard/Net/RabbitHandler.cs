@@ -39,7 +39,6 @@ public class RabbitHandler
         //TODO: HANDLE CONCURRENT CONTAINER CREATION AND DELETION
         if (e.RoutingKey == "Creation")
         {
-            Worker._logger.LogInformation(packet.data);
             Task.WaitAll(Dispatcher.Dispatch(packet));
         }
         

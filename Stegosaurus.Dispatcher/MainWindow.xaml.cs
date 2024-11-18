@@ -87,7 +87,7 @@ public partial class MainWindow : Window
         string msg = "";
         var factory = new ConnectionFactory
         {
-            HostName = "game.xela.space"
+            HostName = "localhost"
         };
         await using var connection = await factory.CreateConnectionAsync();
         await using var channel = await connection.CreateChannelAsync();
