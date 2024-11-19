@@ -10,10 +10,18 @@ public class RabbitHandler
 
     public async Task<byte[]> Receive(IChannel channel,List<string> queues)
     {
+        foreach (var queue in queues)
+        {
+            await channel.QueueDeclareAsync(queue: queue, durable: false, exclusive: false, autoDelete: false,
+                arguments: null);
+            Worker._logger.LogInformation("[" + DateTime.Now +  "] Waiting for messages on " + queue + " queue");
+        }
+        /*
         await channel.QueueDeclareAsync(queue: queues[0], durable: false, exclusive: false, autoDelete: false, arguments: null);
         Worker._logger.LogInformation("[" + DateTime.Now +  "] Waiting for messages on " + queues[0] + " queue");
         await channel.QueueDeclareAsync(queue: queues[1], durable: false, exclusive: false, autoDelete: false, arguments: null);
-        Worker._logger.LogInformation("[" + DateTime.Now +  "] Waiting for messages on " + queues[1] + " queue");
+        Worker._logger.LogInformation("[" + DateTime.Now +  "] Waiting for messages on " + queues[1] + " queue");*/
+        
         
         var consumer = new AsyncEventingBasicConsumer(channel);
         consumer.ReceivedAsync += Received;

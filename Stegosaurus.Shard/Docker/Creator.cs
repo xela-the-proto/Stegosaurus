@@ -32,7 +32,7 @@ public class Creator
                     Username = null,
                     Password = null
                 },
-                new Progress<JSONMessage>(m => logger.LogInformation(m.ToString())));
+                new Progress<JSONMessage>(m => logger.LogInformation(m.ProgressMessage)));
 
             //gets the containers that match the name for checks
             var currentContainers = finder.Find("name",creator.Name).Result;
