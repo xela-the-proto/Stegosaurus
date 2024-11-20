@@ -10,10 +10,12 @@ public class RabbitHandler
 
     public async Task<byte[]> Receive(IChannel channel,List<string> queues)
     {
+        await channel.ExchangeDeclareAsync(exchange: "Dispatch", type: ExchangeType.Direct);
         foreach (var queue in queues)
         {
             await channel.QueueDeclareAsync(queue: queue, durable: false, exclusive: false, autoDelete: false,
                 arguments: null);
+            await channel.QueueBindAsync(queue: queue, exchange: "Dispatch", routingKey: "localhost");
             Worker._logger.LogInformation("[" + DateTime.Now +  "] Waiting for messages on " + queue + " queue");
         }
         /*
@@ -30,8 +32,10 @@ public class RabbitHandler
             Worker._logger.LogInformation("ACK");
             return Task.CompletedTask;
         };
-        await channel.BasicConsumeAsync(queues[0],autoAck: true, consumer: consumer);
-        await channel.BasicConsumeAsync(queues[1],autoAck: true, consumer: consumer);
+        foreach (var queue in queues)
+        {
+            await channel.BasicConsumeAsync(queue,autoAck: true, consumer: consumer);
+        }
         Thread.Sleep(5000);
         return null;
     }
@@ -44,6 +48,7 @@ public class RabbitHandler
         packet.message = e.RoutingKey;
         var body = e.Body.ToArray();
         packet.data = Encoding.UTF8.GetString(body); 
+        Worker._logger.LogInformation(packet.data);
         //TODO: HANDLE CONCURRENT CONTAINER CREATION AND DELETION
         if (e.RoutingKey == "Creation")
         {

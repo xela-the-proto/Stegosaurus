@@ -1,4 +1,5 @@
 using System.Text;
+using System.Threading.Channels;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RabbitMQ.Client;
@@ -14,16 +15,17 @@ public partial class Form1 : Form
 
     private async void btn_connect_exchange_windows_Click(object sender, EventArgs e)
     {
+        
         string msg = "";
         var factory = new ConnectionFactory
         {
-            HostName = "game.xela.space"
+            HostName = "localhost"
         };
         await using var connection = await factory.CreateConnectionAsync();
         await using var channel = await connection.CreateChannelAsync();
-
-        await channel.QueueDeclareAsync(queue: "Creation", durable: false, exclusive: false, autoDelete: false,
-            arguments: null);
+            
+        await channel.ExchangeDeclareAsync(exchange: "Dispatch", type: ExchangeType.Direct);
+        //await channel.QueueDeclareAsync(queue: "Creation", durable: false, exclusive: false, autoDelete: false, arguments: null);
 
         const string message = "Hello World!";
         // read JSON directly from a file
@@ -36,7 +38,7 @@ public partial class Form1 : Form
 
         var body = Encoding.UTF8.GetBytes(msg);
 
-        await channel.BasicPublishAsync(exchange: string.Empty, routingKey: "Creation", body: body);
+        await channel.BasicPublishAsync(exchange: "Dispatch", routingKey: "localhost", body: body);
         Console.WriteLine($" [x] Sent {message}");
 
         Console.WriteLine(" Press [enter] to exit.");
