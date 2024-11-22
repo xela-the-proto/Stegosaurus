@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\thega\\RiderProjects\\stegosaurus\\Stegosaurus.Dispatcher\\Stegosaurus.Dispatcher.csproj": {}
+    "C:\\Users\\thega\\RiderProjects\\Stegosaurus\\Stegosaurus.Dispatcher\\Stegosaurus.Dispatcher.csproj": {}
   },
   "projects": {
-    "C:\\Users\\thega\\RiderProjects\\stegosaurus\\Stegosaurus.Dispatcher\\Stegosaurus.Dispatcher.csproj": {
+    "C:\\Users\\thega\\RiderProjects\\Stegosaurus\\Stegosaurus.Dispatcher\\Stegosaurus.Dispatcher.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\thega\\RiderProjects\\stegosaurus\\Stegosaurus.Dispatcher\\Stegosaurus.Dispatcher.csproj",
+        "projectUniqueName": "C:\\Users\\thega\\RiderProjects\\Stegosaurus\\Stegosaurus.Dispatcher\\Stegosaurus.Dispatcher.csproj",
         "projectName": "Stegosaurus.Dispatcher",
-        "projectPath": "C:\\Users\\thega\\RiderProjects\\stegosaurus\\Stegosaurus.Dispatcher\\Stegosaurus.Dispatcher.csproj",
+        "projectPath": "C:\\Users\\thega\\RiderProjects\\Stegosaurus\\Stegosaurus.Dispatcher\\Stegosaurus.Dispatcher.csproj",
         "packagesPath": "C:\\Users\\thega\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\thega\\RiderProjects\\stegosaurus\\Stegosaurus.Dispatcher\\obj\\",
+        "outputPath": "C:\\Users\\thega\\RiderProjects\\Stegosaurus\\Stegosaurus.Dispatcher\\obj\\",
         "projectStyle": "PackageReference",
         "UsingMicrosoftNETSdk": false,
         "fallbackFolders": [
@@ -53,7 +53,7 @@
           "dependencies": {
             "Newtonsoft.Json": {
               "target": "Package",
-              "version": "[13.0.3, )"
+              "version": "[13.0.1, )"
             },
             "RabbitMQ.Client": {
               "target": "Package",
@@ -79,7 +79,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.304/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
