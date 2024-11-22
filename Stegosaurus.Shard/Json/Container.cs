@@ -5,7 +5,7 @@
 /// </summary>
 public class Container
 {
-    public string? id = "";
-    public string image = "";
-    public string name = "";
+    public string? Id = "";
+    public string Image = "";
+    public string? Name = "";
 }

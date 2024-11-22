@@ -9,7 +9,7 @@ public class Worker : BackgroundService
     public delegate Task<byte[]> RunDispatchListener();
 
     public static ILogger<Worker> _logger;
-    public static DockerClient client = new DockerClientConfiguration().CreateClient();
+    public static DockerClient Client = new DockerClientConfiguration().CreateClient();
 
     public Worker(ILogger<Worker> logger)
     {
@@ -38,7 +38,7 @@ public class Worker : BackgroundService
         var config = await init.Config();
         var factory = new ConnectionFactory
         {
-            HostName = config.ip
+            HostName = config.Ip
         };
         var connection = await factory.CreateConnectionAsync();
         var channel = await connection.CreateChannelAsync();

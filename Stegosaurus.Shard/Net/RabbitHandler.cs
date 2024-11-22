@@ -23,13 +23,12 @@ public class RabbitHandler
 
     private Task Received(object sender, BasicDeliverEventArgs e)
     {
-        var dispatcher = new Dispatcher();
         var packet = new Packet();
-        packet.message = e.RoutingKey.Substring(e.RoutingKey.LastIndexOf("." + 1));
+        packet.Message = e.RoutingKey.Substring(e.RoutingKey.LastIndexOf("." + 1, StringComparison.Ordinal));
         var body = e.Body.ToArray();
-        packet.data = Encoding.UTF8.GetString(body);
-        Worker._logger.LogInformation(packet.data);
-        Worker._logger.LogInformation(packet.message);
+        packet.Data = Encoding.UTF8.GetString(body);
+        Worker._logger.LogInformation(packet.Data);
+        Worker._logger.LogInformation(packet.Message);
         //TODO: HANDLE CONCURRENT CONTAINER CREATION AND DELETION
         if (e.RoutingKey == "creation")
         {

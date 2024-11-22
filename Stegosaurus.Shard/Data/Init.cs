@@ -49,7 +49,7 @@ public class Init
             {
                 var shardConfig = new ShardConfig
                 {
-                    ip = "localhost"
+                    Ip = "localhost"
                 };
                 using (var stream = File.CreateText(JsonManager.WIN_ROOT + @"/configs/shard.conf"))
                 {
@@ -71,7 +71,7 @@ public class Init
             {
                 var shardConfig = new ShardConfig
                 {
-                    ip = "localhost"
+                    Ip = "localhost"
                 };
                 using (var stream = File.CreateText(JsonManager.LIN_ROOT + @"/configs/shard.conf"))
                 {

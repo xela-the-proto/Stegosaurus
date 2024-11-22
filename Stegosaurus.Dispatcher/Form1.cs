@@ -14,7 +14,7 @@ public partial class Form1 : Form
 
     private async void btn_connect_exchange_windows_Click(object sender, EventArgs e)
     {
-        var msg = "";
+        string msg;
         var factory = new ConnectionFactory
         {
             HostName = "localhost"

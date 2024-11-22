@@ -7,24 +7,23 @@ public class Finder
     /// <summary>
     ///     Kind of a "helper" to find containers, shoudl be filled like ("name",foo_name)
     /// </summary>
-    /// <param name="container"></param>
-    /// <param name="key_filter"></param>
-    /// <param name="value_filter"></param>
-    /// <param name="get_offline"></param>
-    public async Task<IList<ContainerListResponse>> Find(string attribute, string attribute_to_match,
-        bool get_offline = true)
+    /// <param name="attribute"></param>
+    /// <param name="attributeToMatch"></param>
+    /// <param name="getOffline"></param>
+    public async Task<IList<ContainerListResponse>> Find(string attribute, string attributeToMatch,
+        bool getOffline = true)
     {
-        var client = Worker.client;
+        var client = Worker.Client;
         var currentContainers = await client.Containers.ListContainersAsync(
             new ContainersListParameters
             {
-                All = get_offline,
+                All = getOffline,
                 Filters = new Dictionary<string, IDictionary<string, bool>>
                 {
                     {
                         attribute, new Dictionary<string, bool>
                         {
-                            [attribute_to_match] = true
+                            [attributeToMatch] = true
                         }
                     }
                 }

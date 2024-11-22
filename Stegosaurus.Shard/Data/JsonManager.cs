@@ -14,22 +14,22 @@ public class JsonManager
     /// <summary>
     ///     Save a container to a json file to keep track
     /// </summary>
-    /// <param name="ToSerialize"></param>
-    public async Task SaveContainerAsync(Container ToSerialize)
+    /// <param name="toSerialize"></param>
+    public async Task SaveContainerAsync(Container toSerialize)
     {
-        if (!File.Exists(WIN_ROOT + @"/containers/" + ToSerialize.id + ".json") &&
+        if (!File.Exists(WIN_ROOT + @"/containers/" + toSerialize.Id + ".json") &&
             RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            using (var file = File.CreateText(WIN_ROOT + @"/containers/" + ToSerialize.id + ".json"))
+            using (var file = File.CreateText(WIN_ROOT + @"/containers/" + toSerialize.Id + ".json"))
             {
                 var serializer = new JsonSerializer();
-                serializer.Serialize(file, ToSerialize);
+                serializer.Serialize(file, toSerialize);
             }
-        else if (File.Exists(LIN_ROOT + @"/containers/" + ToSerialize.id + ".json") &&
+        else if (File.Exists(LIN_ROOT + @"/containers/" + toSerialize.Id + ".json") &&
                  RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            using (var file = File.CreateText(LIN_ROOT + @"/containers/" + ToSerialize.id + ".json"))
+            using (var file = File.CreateText(LIN_ROOT + @"/containers/" + toSerialize.Id + ".json"))
             {
                 var serializer = new JsonSerializer();
-                serializer.Serialize(file, ToSerialize);
+                serializer.Serialize(file, toSerialize);
             }
     }
 }

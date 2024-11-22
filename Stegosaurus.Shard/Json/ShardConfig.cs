@@ -5,5 +5,5 @@
 /// </summary>
 public class ShardConfig
 {
-    public string ip = "localhost";
+    public string Ip = "localhost";
 }

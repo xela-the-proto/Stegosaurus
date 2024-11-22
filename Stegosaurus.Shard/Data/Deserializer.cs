@@ -1,32 +1,32 @@
 ﻿using Docker.DotNet.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Stegosaurus.Shard.Json;
 
-namespace Stegosaurus.Shard.Json;
+namespace Stegosaurus.Shard.Data;
 
 public class Deserializer
 {
     /// <summary>
     ///     Assess the type of class we got from a message and returns it
     /// </summary>
-    /// <param name="msg"></param>
-    /// <param name="deserialize"></param>
-    /// <returns></returns>
+    /// <param name="packet"></param>
+    /// <returns>Object thats been deserialized</returns>
     /// <exception cref="NullReferenceException"></exception>
     public async Task<object> AssessType(Packet packet)
     {
-        var request = packet.message;
-        var cleaned_obj = JsonConvert.DeserializeObject(packet.data);
-        if (cleaned_obj is null) throw new NullReferenceException();
-        var cleaned_json = JObject.Parse(JsonConvert.SerializeObject(cleaned_obj));
+        var request = packet.Message;
+        var cleanedObj = JsonConvert.DeserializeObject(packet.Data);
+        if (cleanedObj is null) throw new NullReferenceException();
+        var cleanedJson = JObject.Parse(JsonConvert.SerializeObject(cleanedObj));
 
 
         switch (request)
         {
             case "Crea    tion":
-                Worker._logger.LogWarning("Found type id for jobject " + cleaned_json.First);
-                var clean_class = _creation(cleaned_json);
-                return clean_class;
+                Worker._logger.LogWarning("Found type id for jobject " + cleanedJson.First);
+                var cleanClass = _creation(cleanedJson);
+                return cleanClass;
             case "shutdown":
                 Environment.Exit(1);
                 break;
@@ -40,7 +40,7 @@ public class Deserializer
     }
 
     /// <summary>
-    ///     single use class to convert the jobject to the actual class
+    ///     single use classes to convert the jobject to the actual class
     /// </summary>
     /// <param name="jObject"></param>
     /// <returns></returns>
@@ -49,13 +49,19 @@ public class Deserializer
         var container = new Container();
         if (!jObject.ContainsKey("id"))
         {
-            container.id = null;
+            container.Id = null;
         }
-        container.name = jObject["name"].ToString().Normalize();
-        container.image = jObject["image"].ToString().Normalize();
+        container.Name = jObject["name"].ToString().Normalize();
+        container.Image = jObject["image"].ToString().Normalize();
 
         return container;
     }
+    
+    /// <summary>
+    ///     single use classes to convert the jobject to the actual class
+    /// </summary>
+    /// <param name="jObject"></param>
+    /// <returns></returns>
 
     public CreateContainerParameters _creation(JObject jObject)
     {

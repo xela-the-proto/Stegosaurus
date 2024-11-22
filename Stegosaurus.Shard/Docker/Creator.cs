@@ -9,14 +9,14 @@ public class Creator
     /// <summary>
     ///     Downloads the image of the container and then creates it, also checks if it exists.
     /// </summary>
-    /// <param name="container"></param>
+    /// <param name="creator"></param>
     /// <exception cref="TimeoutException"></exception>
     public async Task CreateContainer(CreateContainerParameters creator)
     {
         var container = new Container();
         var jsonManager = new JsonManager();
         var finder = new Finder();
-        var client = Worker.client;
+        var client = Worker.Client;
         var logger = Worker._logger;
         //pull image from the docker repo
         await client.Images.CreateImageAsync(
@@ -39,13 +39,13 @@ public class Creator
         {
             logger.LogInformation("creating container with name " + creator.Name + " and image " + creator.Image);
             var reply = await client.Containers.CreateContainerAsync(creator);
-            container.name = creator.Name;
-            container.image = creator.Image;
-            container.id = reply.ID;
+            container.Name = creator.Name;
+            container.Image = creator.Image;
+            container.Id = reply.ID;
             jsonManager.SaveContainerAsync(container);
             //check if the same container exists
         }
-        else if (currentContainers[0].Names[0] == "/" + container.name && currentContainers[0].Image == container.image)
+        else if (currentContainers[0].Names[0] == "/" + container.Name && currentContainers[0].Image == container.Image)
         {
             logger.LogWarning("Container exists!");
         }
