@@ -51,6 +51,7 @@ partial class Form1
         btn_connect_exchange_linux.TabIndex = 1;
         btn_connect_exchange_linux.Text = "Connect linux";
         btn_connect_exchange_linux.UseVisualStyleBackColor = true;
+        btn_connect_exchange_linux.Click += btn_connect_exchange_linux_Click;
         // 
         // Form1
         // 

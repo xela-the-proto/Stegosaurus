@@ -37,7 +37,7 @@ public class Worker : BackgroundService
         await init.Local();
         var config = await init.Config();
         var factory = new ConnectionFactory
-        {
+        {   
             HostName = config.Ip
         };
         var connection = await factory.CreateConnectionAsync();
@@ -46,7 +46,7 @@ public class Worker : BackgroundService
         {
             //TODO:MORE CHANNELS HANDLING AT ONCE?
             var message = await handler.Receive(channel, queues);
-            await Task.Delay(0, stoppingToken);
+            await Task.Delay(5000, stoppingToken);
         }
     }
 }

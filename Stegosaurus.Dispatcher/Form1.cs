@@ -17,7 +17,32 @@ public partial class Form1 : Form
         string msg;
         var factory = new ConnectionFactory
         {
-            HostName = "localhost"
+            HostName = "game.xela.space"
+        };
+        await using var connection = await factory.CreateConnectionAsync();
+        await using var channel = await connection.CreateChannelAsync();
+
+        await channel.ExchangeDeclareAsync("dispatch", ExchangeType.Topic);
+        //await channel.QueueDeclareAsync(queue: "Creation", durable: false, exclusive: false, autoDelete: false, arguments: null);
+        // read JSON directly from a file
+        using (var file = File.OpenText(@"C:\Users\thega\AppData\Roaming\StegoShard\request.json"))
+        using (var reader = new JsonTextReader(file))
+        {
+            var o2 = (JObject)JToken.ReadFrom(reader);
+            msg = o2.ToString();
+        }
+
+        var body = Encoding.UTF8.GetBytes(msg);
+
+        await channel.BasicPublishAsync("dispatch", "0.creation", body);
+    }
+
+    private async void btn_connect_exchange_linux_Click(object sender, EventArgs e)
+    {
+        string msg;
+        var factory = new ConnectionFactory
+        {
+            HostName = "game.xela.space"
         };
         await using var connection = await factory.CreateConnectionAsync();
         await using var channel = await connection.CreateChannelAsync();
@@ -36,7 +61,7 @@ public partial class Form1 : Form
 
         var body = Encoding.UTF8.GetBytes(msg);
 
-        await channel.BasicPublishAsync("dispatch", "localhost.creation", body);
+        await channel.BasicPublishAsync("dispatch", "1.creation", body);
         Console.WriteLine($" [x] Sent {message}");
 
         Console.WriteLine(" Press [enter] to exit.");

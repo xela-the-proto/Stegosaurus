@@ -12,11 +12,11 @@ public class RabbitHandler
         var queueDeclareResult = await channel.QueueDeclareAsync();
         await channel.ExchangeDeclareAsync("dispatch", ExchangeType.Topic);
         var queueName = queueDeclareResult.QueueName;
-        await channel.QueueBindAsync(queueName, "dispatch", "localhost.*");
+        await channel.QueueBindAsync(queueName, "dispatch", "1.*");
+        Worker._logger.LogInformation("Waiting for message on exchange...");
         var consumer = new AsyncEventingBasicConsumer(channel);
         consumer.ReceivedAsync += Received;
         await channel.BasicConsumeAsync(queueName, true, consumer);
-        Thread.Sleep(5000);
         return null;
     }
 
@@ -24,7 +24,8 @@ public class RabbitHandler
     private Task Received(object sender, BasicDeliverEventArgs e)
     {
         var packet = new Packet();
-        packet.Message = e.RoutingKey.Substring(e.RoutingKey.LastIndexOf("." + 1, StringComparison.Ordinal));
+        Worker._logger.LogInformation(e.RoutingKey.LastIndexOf(@".").ToString());
+        packet.Message = e.RoutingKey.Substring(e.RoutingKey.LastIndexOf(@".") + 1);
         var body = e.Body.ToArray();
         packet.Data = Encoding.UTF8.GetString(body);
         Worker._logger.LogInformation(packet.Data);
