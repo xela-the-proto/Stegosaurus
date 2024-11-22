@@ -13,6 +13,7 @@
         "packagesPath": "C:\\Users\\thega\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\thega\\RiderProjects\\stegosaurus\\Stegosaurus.Dispatcher\\obj\\",
         "projectStyle": "PackageReference",
+        "UsingMicrosoftNETSdk": false,
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
@@ -52,7 +53,7 @@
           "dependencies": {
             "Newtonsoft.Json": {
               "target": "Package",
-              "version": "[13.0.1, )"
+              "version": "[13.0.3, )"
             },
             "RabbitMQ.Client": {
               "target": "Package",
