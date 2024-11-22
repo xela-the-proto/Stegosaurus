@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Stegosaurus.Dispatcher")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+64f479803ca81c18b659c70f54bb1642d94e69e5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0574ac04ae7a53ee4476ad391dbd7274c7f54e2c")]
 [assembly: System.Reflection.AssemblyProductAttribute("Stegosaurus.Dispatcher")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Stegosaurus.Dispatcher")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
