@@ -12,4 +12,5 @@
 /dataSources/
 /dataSources.local.xml
 obj/
+bin/
 .vs/
