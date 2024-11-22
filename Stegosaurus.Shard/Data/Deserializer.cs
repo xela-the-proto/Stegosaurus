@@ -25,23 +25,22 @@ public class Deserializer
             throw new NullReferenceException();
         }
         JObject cleaned_json = JObject.Parse(JsonConvert.SerializeObject(cleaned_obj));
-        
-        
-            switch (request)
-            {
-                case "Creation":
-                    Worker._logger.LogWarning("Found type id for jobject " + cleaned_json.First);
-                    CreateContainerParameters clean_class = this._creation(cleaned_json);
-                    return clean_class;
-                case "shutdown":
-                    Environment.Exit(1);
-                    break;
-                case null:
-                    Worker._logger.LogCritical("Badly formed packet exiting!");
-                    Environment.Exit(2);
-                    break;
-            }
-        
+
+
+        switch (request)
+        {
+            case "Crea    tion":
+                Worker._logger.LogWarning("Found type id for jobject " + cleaned_json.First);
+                CreateContainerParameters clean_class = this._creation(cleaned_json);
+                return clean_class;
+            case "shutdown":
+                Environment.Exit(1);
+                break;
+            case null:
+                Worker._logger.LogCritical("Badly formed packet exiting!");
+                Environment.Exit(2);
+                break;
+        }
 
         return null;
     }

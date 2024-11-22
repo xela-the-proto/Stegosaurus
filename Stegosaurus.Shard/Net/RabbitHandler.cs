@@ -10,6 +10,11 @@ public class RabbitHandler
 
     public async Task<byte[]> Receive(IChannel channel,List<string> queues)
     {
+        QueueDeclareOk queueDeclareResult = await channel.QueueDeclareAsync();
+        await channel.ExchangeDeclareAsync(exchange: "dispatch", type: ExchangeType.Topic);
+        string queueName = queueDeclareResult.QueueName;
+
+        /*
         await channel.ExchangeDeclareAsync(exchange: "Dispatch", type: ExchangeType.Direct);
         foreach (var queue in queues)
         {
@@ -24,18 +29,10 @@ public class RabbitHandler
         await channel.QueueDeclareAsync(queue: queues[1], durable: false, exclusive: false, autoDelete: false, arguments: null);
         Worker._logger.LogInformation("[" + DateTime.Now +  "] Waiting for messages on " + queues[1] + " queue");*/
         
-        
+        await channel.QueueBindAsync(queue: queueName, exchange: "dispatch", routingKey: "localhost.*");
         var consumer = new AsyncEventingBasicConsumer(channel);
         consumer.ReceivedAsync += Received;
-        channel.BasicAcksAsync += (sender, @event) =>
-        {
-            Worker._logger.LogInformation("ACK");
-            return Task.CompletedTask;
-        };
-        foreach (var queue in queues)
-        {
-            await channel.BasicConsumeAsync(queue,autoAck: true, consumer: consumer);
-        }
+        await channel.BasicConsumeAsync(queueName,autoAck: true, consumer: consumer);
         Thread.Sleep(5000);
         return null;
     }
@@ -45,10 +42,11 @@ public class RabbitHandler
     {
         Dispatcher dispatcher = new Dispatcher();
         Packet packet = new Packet();
-        packet.message = e.RoutingKey;
+        packet.message = e.RoutingKey.Substring(e.RoutingKey.LastIndexOf("." + 1));
         var body = e.Body.ToArray();
         packet.data = Encoding.UTF8.GetString(body); 
         Worker._logger.LogInformation(packet.data);
+        Worker._logger.LogInformation(packet.message);
         //TODO: HANDLE CONCURRENT CONTAINER CREATION AND DELETION
         if (e.RoutingKey == "Creation")
         {

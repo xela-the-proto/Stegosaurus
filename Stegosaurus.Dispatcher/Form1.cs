@@ -24,7 +24,7 @@ public partial class Form1 : Form
         await using var connection = await factory.CreateConnectionAsync();
         await using var channel = await connection.CreateChannelAsync();
             
-        await channel.ExchangeDeclareAsync(exchange: "Dispatch", type: ExchangeType.Direct);
+        await channel.ExchangeDeclareAsync(exchange: "dispatch", type: ExchangeType.Topic);
         //await channel.QueueDeclareAsync(queue: "Creation", durable: false, exclusive: false, autoDelete: false, arguments: null);
 
         const string message = "Hello World!";
@@ -38,7 +38,7 @@ public partial class Form1 : Form
 
         var body = Encoding.UTF8.GetBytes(msg);
 
-        await channel.BasicPublishAsync(exchange: "Dispatch", routingKey: "localhost", body: body);
+        await channel.BasicPublishAsync(exchange: "dispatch", routingKey: "localhost.creation", body: body);
         Console.WriteLine($" [x] Sent {message}");
 
         Console.WriteLine(" Press [enter] to exit.");
