@@ -1,3 +1,6 @@
+using System;
+using System.Windows.Forms;
+
 namespace Stegosaurus.Dispatcher;
 
 static class Program
