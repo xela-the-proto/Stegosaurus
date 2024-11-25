@@ -5,5 +5,8 @@
 /// </summary>
 public class ShardConfig
 {
-    public string Ip = "localhost";
+    public string ShardID { get; set; }
+    public string Ip { get; set; }
+    
+    public bool Broadcast { get; set; }
 }

@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Stegosaurus.Shard.Data;
 using Stegosaurus.Shard.Json;
+using Stegosaurus.Shard.Net;
 
 namespace Stegosaurus.Shard;
 
@@ -10,7 +11,7 @@ public class Init
     /// <summary>
     ///     Check and if needed creates all the needed directories
     /// </summary>
-    public async Task Local()
+    public async Task LocalFiles()
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
@@ -45,21 +46,23 @@ public class Init
         var serializer = new JsonSerializer();
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            if (!File.Exists(JsonManager.WIN_ROOT + @"/configs/shard.conf"))
+            if (!File.Exists(JsonManager.WIN_ROOT + @"/configs/shard.json"))
             {
                 var shardConfig = new ShardConfig
                 {
-                    Ip = "localhost"
+                    Ip = "localhost",
+                    ShardID = GenerateID.Generate().Result,
+                    Broadcast = false
                 };
-                using (var stream = File.CreateText(JsonManager.WIN_ROOT + @"/configs/shard.conf"))
+                using (var stream = File.CreateText(JsonManager.WIN_ROOT + @"/configs/shard.json"))
                 {
                     serializer.Serialize(stream, shardConfig);
                 }
-
+                shardConfig.Broadcast = true;
                 return shardConfig;
             }
 
-            using (var stream = File.OpenText(JsonManager.WIN_ROOT + @"/configs/shard.conf"))
+            using (var stream = File.OpenText(JsonManager.WIN_ROOT + @"/configs/shard.json"))
             {
                 return (ShardConfig)serializer.Deserialize(stream, typeof(ShardConfig));
             }
@@ -67,13 +70,13 @@ public class Init
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            if (!File.Exists(JsonManager.LIN_ROOT + @"/configs/shard.conf"))
+            if (!File.Exists(JsonManager.LIN_ROOT + @"/configs/shard.json"))
             {
                 var shardConfig = new ShardConfig
                 {
                     Ip = "localhost"
                 };
-                using (var stream = File.CreateText(JsonManager.LIN_ROOT + @"/configs/shard.conf"))
+                using (var stream = File.CreateText(JsonManager.LIN_ROOT + @"/configs/shard.json"))
                 {
                     serializer.Serialize(stream, shardConfig);
                 }
@@ -81,7 +84,7 @@ public class Init
                 return shardConfig;
             }
 
-            using (var stream = File.OpenText(JsonManager.LIN_ROOT + @"/configs/shard.conf"))
+            using (var stream = File.OpenText(JsonManager.LIN_ROOT + @"/configs/shard.json"))
             {
                 return (ShardConfig)serializer.Deserialize(stream, typeof(ShardConfig));
             }

@@ -32,9 +32,7 @@ public class Worker : BackgroundService
             "Deletion",
             "Info"
         };
-
-
-        await init.Local();
+        await init.LocalFiles();
         var config = await init.Config();
         var factory = new ConnectionFactory
         {   
@@ -42,6 +40,10 @@ public class Worker : BackgroundService
         };
         var connection = await factory.CreateConnectionAsync();
         var channel = await connection.CreateChannelAsync();
+        if (config.Broadcast)
+        {
+            await Broadcast.BroadcastID(GenerateID.Generate().Result,channel);
+        }
         while (!stoppingToken.IsCancellationRequested)
         {
             //TODO:MORE CHANNELS HANDLING AT ONCE?
