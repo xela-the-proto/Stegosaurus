@@ -1,7 +1,9 @@
+using System.ComponentModel.Design.Serialization;
 using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 
 namespace Stegosaurus.Dispatcher;
 
@@ -9,6 +11,8 @@ public partial class Form1 : Form
 {
     public Form1()
     {
+        Thread t = new Thread(new ThreadStart(ReceiveIDs));
+        t.Start();
         InitializeComponent();
     }
 
@@ -65,5 +69,32 @@ public partial class Form1 : Form
         Console.WriteLine($" [x] Sent {message}");
 
         Console.WriteLine(" Press [enter] to exit.");
+    }
+    
+    private async void ReceiveIDs()
+    {
+        var factory = new ConnectionFactory { HostName = "game.xela.space" };
+        using var connection = await factory.CreateConnectionAsync();
+        using var channel = await connection.CreateChannelAsync();
+        await channel.ExchangeDeclareAsync(exchange:string.Empty,
+            type: ExchangeType.Fanout);
+
+        // declare a server-named queue
+        QueueDeclareOk queueDeclareResult = await channel.QueueDeclareAsync();
+        string queueName = queueDeclareResult.QueueName;
+        await channel.QueueBindAsync(queue: queueName, exchange: string.Empty, routingKey: string.Empty);
+        
+        while (true)
+        {
+            var consumer = new AsyncEventingBasicConsumer(channel);
+            consumer.ReceivedAsync += (model, ea) =>
+            {
+                byte[] body = ea.Body.ToArray();
+                var message = Encoding.UTF8.GetString(body);
+                Console.WriteLine($" [x] {message}");
+                return Task.CompletedTask;
+            };
+            await channel.BasicConsumeAsync(queueName, autoAck: true, consumer: consumer);
+        }
     }
 }

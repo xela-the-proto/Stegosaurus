@@ -40,14 +40,16 @@ public class Worker : BackgroundService
         };
         var connection = await factory.CreateConnectionAsync();
         var channel = await connection.CreateChannelAsync();
-        if (config.Broadcast)
-        {
-            await Broadcast.BroadcastID(GenerateID.Generate().Result,channel);
-        }
+        var id = GenerateID.Generate().Result;
+        Broadcast br = new Broadcast(id, channel);
+        Thread t_BroadcastID = new Thread(new ThreadStart(br.BroadcastID));
+        t_BroadcastID.Name = "Broadcast_Thread";
+        t_BroadcastID.Start();
+        
         while (!stoppingToken.IsCancellationRequested)
         {
             //TODO:MORE CHANNELS HANDLING AT ONCE?
-            var message = await handler.Receive(channel, queues);
+            await handler.Receive(channel, queues,id);
             await Task.Delay(5000, stoppingToken);
         }
     }

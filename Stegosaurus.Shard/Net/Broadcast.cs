@@ -1,11 +1,21 @@
-﻿using RabbitMQ.Client;
+﻿using System.Text;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 
 namespace Stegosaurus.Shard.Net;
 
 public class Broadcast
 {
-    public static async Task BroadcastID(string ID, IChannel channel)
+    private string id;
+    private IChannel channel;
+
+    public Broadcast(string ID, IChannel channel)
     {
-        channel.ExchangeDeclareAsync("broadcast-id", ExchangeType.Direct);
+        this.id = ID;
+        this.channel = channel;
+    }
+    public void BroadcastID()
+    { 
+        channel.BasicPublishAsync(exchange:string.Empty, routingKey:string.Empty,body:Encoding.UTF8.GetBytes(id));
     }
 }

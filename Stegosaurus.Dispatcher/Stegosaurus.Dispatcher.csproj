@@ -12,5 +12,6 @@
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
       <PackageReference Include="RabbitMQ.Client" Version="7.0.0" />
       <PackageReference Include="RandomDataGenerator.Net" Version="1.0.18" />
+      <PackageReference Include="SQLite" Version="3.13.0" />
     </ItemGroup>
 </Project>
