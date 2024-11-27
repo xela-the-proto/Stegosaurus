@@ -14,7 +14,7 @@ public class Broadcast
         this.id = ID;
         this.channel = channel;
     }
-    public void BroadcastID()
+    public Func<CancellationToken, ValueTask> BroadcastID()
     {
         Worker._logger.LogWarning("Broadcasting to queue to register id...");
         while (true)
@@ -24,8 +24,8 @@ public class Broadcast
         }
     }
 
-    public void StopBroadcasting()
+    public void StopBroadcasting(object? state)
     {
-        Thread th = new Thread()
+        
     }
 }
