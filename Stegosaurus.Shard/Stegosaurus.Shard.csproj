@@ -26,6 +26,7 @@
 
     <ItemGroup>
         <Content Remove="DockerFIles\minecraft\**"/>
+        <Content Include=".github\workflows\build.yml" />
     </ItemGroup>
 
     <ItemGroup>
