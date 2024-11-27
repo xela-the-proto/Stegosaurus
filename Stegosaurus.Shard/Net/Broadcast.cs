@@ -15,7 +15,17 @@ public class Broadcast
         this.channel = channel;
     }
     public void BroadcastID()
-    { 
-        channel.BasicPublishAsync(exchange:string.Empty, routingKey:string.Empty,body:Encoding.UTF8.GetBytes(id));
+    {
+        Worker._logger.LogWarning("Broadcasting to queue to register id...");
+        while (true)
+        {
+            channel.BasicPublishAsync(exchange:string.Empty, routingKey:string.Empty,body:Encoding.UTF8.GetBytes(id)); 
+            Thread.Sleep(5000);
+        }
+    }
+
+    public void StopBroadcasting()
+    {
+        Thread th = new Thread()
     }
 }

@@ -24,6 +24,7 @@ public class Worker : BackgroundService
     /// <param name="stoppingToken"></param>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        CancellationToken cancelbroadcats = new CancellationToken();
         var handler = new RabbitHandler();
         var init = new Init();
         List<string> queues = new()
