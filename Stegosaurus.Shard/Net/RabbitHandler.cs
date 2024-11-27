@@ -7,7 +7,7 @@ namespace Stegosaurus.Shard.Net;
 
 public class RabbitHandler
 {
-    public async Task<byte[]> Receive(IChannel channel, List<string> queues,string ID)
+    public async Func<CancellationToken, ValueTask> Receive(IChannel channel, List<string> queues,string ID)
     {
         var queueDeclareResult = await channel.QueueDeclareAsync();
         await channel.ExchangeDeclareAsync("dispatch", ExchangeType.Topic);
@@ -17,7 +17,7 @@ public class RabbitHandler
         var consumer = new AsyncEventingBasicConsumer(channel);
         consumer.ReceivedAsync += Received;
         await channel.BasicConsumeAsync(queueName, true, consumer);
-        return null;
+        return ValueTask.CompletedTask;
     }
 
 
