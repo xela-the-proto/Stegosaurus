@@ -6,13 +6,13 @@ using Stegosaurus.Shard.Json;
 
 namespace Stegosaurus.Shard.Net;
 
-public class Dispatcher
+public class DockerDispatcher
 {
     /// <summary>
     ///     Called when we receive a message from the queue, checks what type of request we got and precesses it accordingly
     /// </summary>
     /// <param name="packet"></param>
-    public static async Task Dispatch(Packet packet)
+    public static async Task DockerDispatch(Packet packet)
     {
         //TODO:RUN MULTIPLE OPERATIONS AT THE SAME TIME?
         var deserializer = new Deserializer();

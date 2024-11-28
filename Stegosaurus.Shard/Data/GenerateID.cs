@@ -1,5 +1,9 @@
-﻿using RandomDataGenerator.FieldOptions;
+﻿using System.Runtime.InteropServices;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using RandomDataGenerator.FieldOptions;
 using RandomDataGenerator.Randomizers;
+using Stegosaurus.Shard.Data;
 
 namespace Stegosaurus.Shard.Net;
 
@@ -17,5 +21,29 @@ public class GenerateID
         string iban = randomHex.Generate();
         ID = word1 + "-" + word2 + "-" + iban;
         return Task.FromResult(ID);
+    }
+
+    public static Task<string> GetID()
+    {
+        if (File.Exists(JsonManager.WIN_ROOT + "/configs/shard.json") && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            using (StreamReader file = File.OpenText(JsonManager.WIN_ROOT + "/configs/shard.json"))
+            using (JsonTextReader reader = new JsonTextReader(file))
+            {
+                JObject o2 = (JObject)JToken.ReadFrom(reader);
+                return Task.FromResult(o2["ShardID"].ToString());
+            }
+        }
+        if (File.Exists(JsonManager.LIN_ROOT + "/configs/shard.json") && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            using (StreamReader file = File.OpenText(JsonManager.LIN_ROOT + "/configs/shard.json"))
+            using (JsonTextReader reader = new JsonTextReader(file))
+            {
+                JObject o2 = (JObject)JToken.ReadFrom(reader);
+                return Task.FromResult(o2["ShardID"].ToString());
+            }
+        }
+
+        return null;
     }
 }

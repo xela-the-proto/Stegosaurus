@@ -14,12 +14,19 @@ public class Broadcast
         this.id = ID;
         this.channel = channel;
     }
-    public Func<CancellationToken, ValueTask> BroadcastID()
+    public void BroadcastID()
     {
+        bool break_broadcast = false;
         Worker._logger.LogWarning("Broadcasting to queue to register id...");
-        while (true)
+        channel.BasicAcksAsync += (sender, @event) =>
         {
-            channel.BasicPublishAsync(exchange:string.Empty, routingKey:string.Empty,body:Encoding.UTF8.GetBytes(id)); 
+            Worker._logger.LogWarning("Received Ack stopping broadcast...");
+            break_broadcast = true;
+            return Task.CompletedTask;
+        };
+        while (!break_broadcast)
+        {
+            channel.BasicPublishAsync(exchange:"id", routingKey:string.Empty,body:Encoding.UTF8.GetBytes(id));
             Thread.Sleep(5000);
         }
     }

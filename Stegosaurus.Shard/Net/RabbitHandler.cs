@@ -7,7 +7,7 @@ namespace Stegosaurus.Shard.Net;
 
 public class RabbitHandler
 {
-    public async Func<CancellationToken, ValueTask> Receive(IChannel channel, List<string> queues,string ID)
+    public async Task<byte[]> Receive(IChannel channel, List<string> queues,string ID)
     {
         var queueDeclareResult = await channel.QueueDeclareAsync();
         await channel.ExchangeDeclareAsync("dispatch", ExchangeType.Topic);
@@ -17,7 +17,7 @@ public class RabbitHandler
         var consumer = new AsyncEventingBasicConsumer(channel);
         consumer.ReceivedAsync += Received;
         await channel.BasicConsumeAsync(queueName, true, consumer);
-        return ValueTask.CompletedTask;
+        return null;
     }
 
 
@@ -31,9 +31,12 @@ public class RabbitHandler
         Worker._logger.LogInformation(packet.Data);
         Worker._logger.LogInformation(packet.Message);
         //TODO: HANDLE CONCURRENT CONTAINER CREATION AND DELETION
-        if (e.RoutingKey == "creation")
+        if (Worker.queues.Contains(packet.Message))
         {
-            Dispatcher.Dispatch(packet).Wait();
+            DockerDispatcher.DockerDispatch(packet);
+        }else if (packet.Message == "IDBROADCAST")
+        {
+            
         }
         return Task.CompletedTask;
     }

@@ -1,6 +1,4 @@
 using Docker.DotNet;
-using Polly;
-using Polly.Retry;
 using RabbitMQ.Client;
 using Stegosaurus.Shard.Net;
 
@@ -45,16 +43,19 @@ public class Worker : BackgroundService
         };
         var connection = await factory.CreateConnectionAsync();
         var channel = await connection.CreateChannelAsync();
+        var id = GenerateID.GetID().Result;
+        if (config.Broadcast)
+        {
+            Broadcast br = new Broadcast(id, channel);
+            Thread th = new Thread(new ThreadStart(br.BroadcastID));
+            th.Name ="Broadcast";
+            th.Start();
+        }
         
-        var id = GenerateID.Generate().Result;
-        Broadcast br = new Broadcast(id, channel);
-        ResiliencePipeline pipeline = new ResiliencePipelineBuilder().AddRetry(new RetryStrategyOptions())
-            .AddTimeout(TimeSpan.FromSeconds(10)).Build();
-       
         
         while (!stoppingToken.IsCancellationRequested)
-        {
-            await pipeline.ExecuteAsync(handler.Receive(channel, queues, id));
+        { 
+            await handler.Receive(channel, queues, id);
             await Task.Delay(5000, stoppingToken);
         }
     }

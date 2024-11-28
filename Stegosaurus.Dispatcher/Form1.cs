@@ -76,25 +76,26 @@ public partial class Form1 : Form
         var factory = new ConnectionFactory { HostName = "game.xela.space" };
         using var connection = await factory.CreateConnectionAsync();
         using var channel = await connection.CreateChannelAsync();
-        await channel.ExchangeDeclareAsync(exchange:string.Empty,
+        await channel.ExchangeDeclareAsync(exchange:"id",
             type: ExchangeType.Fanout);
 
         // declare a server-named queue
         QueueDeclareOk queueDeclareResult = await channel.QueueDeclareAsync();
         string queueName = queueDeclareResult.QueueName;
-        await channel.QueueBindAsync(queue: queueName, exchange: string.Empty, routingKey: string.Empty);
-        
+        await channel.QueueBindAsync(queue: queueName, exchange: "id", routingKey: string.Empty);
+        var consumer = new AsyncEventingBasicConsumer(channel);
         while (true)
         {
-            var consumer = new AsyncEventingBasicConsumer(channel);
             consumer.ReceivedAsync += (model, ea) =>
             {
                 byte[] body = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
                 Console.WriteLine($" [x] {message}");
+                channel.BasicAckAsync(ea.DeliveryTag,false);
                 return Task.CompletedTask;
             };
             await channel.BasicConsumeAsync(queueName, autoAck: true, consumer: consumer);
+            Thread.Sleep(1000);
         }
     }
 }
