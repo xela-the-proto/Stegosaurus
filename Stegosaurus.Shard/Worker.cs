@@ -39,7 +39,10 @@ public class Worker : BackgroundService
         
         var factory = new ConnectionFactory
         {   
-            HostName = config.Ip
+            HostName = config.Ip,
+            UserName = "admin",
+            Password = "admin"
+            
         };
         var connection = await factory.CreateConnectionAsync();
         var channel = await connection.CreateChannelAsync();
@@ -51,8 +54,6 @@ public class Worker : BackgroundService
             th.Name ="Broadcast";
             th.Start();
         }
-        
-        
         while (!stoppingToken.IsCancellationRequested)
         { 
             await handler.Receive(channel, queues, id);

@@ -18,6 +18,7 @@ public class Broadcast
     {
         bool break_broadcast = false;
         Worker._logger.LogWarning("Broadcasting to queue to register id...");
+        
         channel.BasicAcksAsync += (sender, @event) =>
         {
             Worker._logger.LogWarning("Received Ack stopping broadcast...");

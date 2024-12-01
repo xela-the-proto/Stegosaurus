@@ -9,10 +9,15 @@ namespace Stegosaurus.Dispatcher;
 
 public partial class Form1 : Form
 {
+    public static Dictionary<string, Thread> threadDictionary = new Dictionary<string, Thread>();
+    public static CancellationTokenRegistration
     public Form1()
     {
-        Thread t = new Thread(new ThreadStart(ReceiveIDs));
-        t.Start();
+        
+        Thread myThread = new Thread(() => ReceiveIDs());
+        myThread.Name = Convert.ToString("ReceiveIDs");
+        myThread.Start();
+        threadDictionary.Add("ReceiveIDs", myThread);
         InitializeComponent();
     }
 
@@ -21,7 +26,9 @@ public partial class Form1 : Form
         string msg;
         var factory = new ConnectionFactory
         {
-            HostName = "game.xela.space"
+            HostName = "game.xela.space",
+            UserName = "admin",
+            Password = "admin"
         };
         await using var connection = await factory.CreateConnectionAsync();
         await using var channel = await connection.CreateChannelAsync();
@@ -46,7 +53,9 @@ public partial class Form1 : Form
         string msg;
         var factory = new ConnectionFactory
         {
-            HostName = "game.xela.space"
+            HostName = "game.xela.space",
+            UserName = "admin",
+            Password = "admin"
         };
         await using var connection = await factory.CreateConnectionAsync();
         await using var channel = await connection.CreateChannelAsync();
@@ -73,7 +82,12 @@ public partial class Form1 : Form
     
     private async void ReceiveIDs()
     {
-        var factory = new ConnectionFactory { HostName = "game.xela.space" };
+        var factory = new ConnectionFactory
+        {
+            HostName = "game.xela.space",
+            UserName = "admin",
+            Password = "admin"
+        };
         using var connection = await factory.CreateConnectionAsync();
         using var channel = await connection.CreateChannelAsync();
         await channel.ExchangeDeclareAsync(exchange:"id",
@@ -90,12 +104,22 @@ public partial class Form1 : Form
             {
                 byte[] body = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
-                Console.WriteLine($" [x] {message}");
-                channel.BasicAckAsync(ea.DeliveryTag,false);
+                if (message is not null)
+                {
+                    Console.WriteLine($" [x] {message}");
+                    CheckID(message);
+                    return Task.CompletedTask;
+                }
+                
                 return Task.CompletedTask;
             };
             await channel.BasicConsumeAsync(queueName, autoAck: true, consumer: consumer);
             Thread.Sleep(1000);
         }
+    }
+
+    private void CheckID(string message)
+    {
+        threadDictionary["ReceiveIDs"].Interrupt();
     }
 }

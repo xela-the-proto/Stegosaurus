@@ -47,10 +47,12 @@ public class Init
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             if (!File.Exists(JsonManager.WIN_ROOT + @"/configs/shard.json"))
-            {
+            { 
                 var shardConfig = new ShardConfig
                 {
                     Ip = "localhost",
+                    Username = "changeme",
+                    Password = "changeme",
                     ShardID = GenerateID.Generate().Result,
                     Broadcast = false
                 };

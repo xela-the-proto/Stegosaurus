@@ -34,9 +34,6 @@ public class RabbitHandler
         if (Worker.queues.Contains(packet.Message))
         {
             DockerDispatcher.DockerDispatch(packet);
-        }else if (packet.Message == "IDBROADCAST")
-        {
-            
         }
         return Task.CompletedTask;
     }
