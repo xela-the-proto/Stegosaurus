@@ -4,20 +4,16 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using Stegosaurus.Dispatcher.JSON;
 
 namespace Stegosaurus.Dispatcher;
 
 public partial class Form1 : Form
 {
-    public static Dictionary<string, Thread> threadDictionary = new Dictionary<string, Thread>();
-    public static CancellationTokenRegistration
+    public static Dictionary<string, ThreadCanc> threadDictionary = new Dictionary<string, ThreadCanc>();
+    public static CancellationTokenSource CANCEL_BROADCAST = new CancellationTokenSource();
     public Form1()
     {
-        
-        Thread myThread = new Thread(() => ReceiveIDs());
-        myThread.Name = Convert.ToString("ReceiveIDs");
-        myThread.Start();
-        threadDictionary.Add("ReceiveIDs", myThread);
         InitializeComponent();
     }
 
@@ -80,7 +76,7 @@ public partial class Form1 : Form
         Console.WriteLine(" Press [enter] to exit.");
     }
     
-    private async void ReceiveIDs()
+    private async void ReceiveIDs(object? state)
     {
         var factory = new ConnectionFactory
         {
@@ -108,6 +104,7 @@ public partial class Form1 : Form
                 {
                     Console.WriteLine($" [x] {message}");
                     CheckID(message);
+                    CANCEL_BROADCAST.Cancel();
                     return Task.CompletedTask;
                 }
                 
@@ -120,6 +117,12 @@ public partial class Form1 : Form
 
     private void CheckID(string message)
     {
-        threadDictionary["ReceiveIDs"].Interrupt();
+        
+    }
+
+    private void Form1_Load(object sender, EventArgs e)
+    {
+        CancellationTokenSource source = new CancellationTokenSource();
+        ThreadPool.QueueUserWorkItem(new WaitCallback(ReceiveIDs), CANCEL_BROADCAST.Token);
     }
 }

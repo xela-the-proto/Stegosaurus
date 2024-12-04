@@ -27,7 +27,7 @@ public class Broadcast
         };
         while (!break_broadcast)
         {
-            channel.BasicPublishAsync(exchange:"id", routingKey:string.Empty,body:Encoding.UTF8.GetBytes(id));
+            channel.BasicPublishAsync(exchange:"id", routingKey:"Discover",body:Encoding.UTF8.GetBytes(id));
             Thread.Sleep(5000);
         }
     }

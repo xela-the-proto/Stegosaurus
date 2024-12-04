@@ -61,6 +61,7 @@ partial class Form1
         Controls.Add(btn_connect_exchange_linux);
         Controls.Add(btn_connect_exchange_windows);
         Text = "Form1";
+        Load += Form1_Load;
         ResumeLayout(false);
     }
 
