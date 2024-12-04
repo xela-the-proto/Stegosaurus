@@ -30,7 +30,7 @@ public class Worker : BackgroundService
     /// <param name="stoppingToken"></param>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        CancellationTokenSource cancelBroadcats = new CancellationTokenSource();
+        var args = Environment.GetCommandLineArgs();
         var handler = new RabbitHandler();
         var init = new Init();
         
@@ -47,10 +47,10 @@ public class Worker : BackgroundService
         var connection = await factory.CreateConnectionAsync();
         var channel = await connection.CreateChannelAsync();
         var id = GenerateID.GetID().Result;
-        if (config.Broadcast)
+        if (args.Contains("--discover"))
         {
             Broadcast br = new Broadcast(id, channel);
-            Thread th = new Thread(new ThreadStart(br.BroadcastID));
+            Thread th = new Thread(br.BroadcastID);
             th.Name ="Broadcast";
             th.Start();
         }

@@ -31,9 +31,4 @@ public class Broadcast
             Thread.Sleep(5000);
         }
     }
-
-    public void StopBroadcasting(object? state)
-    {
-        
-    }
 }
