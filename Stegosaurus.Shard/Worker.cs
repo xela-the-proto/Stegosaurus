@@ -1,82 +1,63 @@
-using System.Net;
-using System.Net.Sockets;
 using Docker.DotNet;
-using Docker.DotNet.Models;
-using Newtonsoft.Json;
 using RabbitMQ.Client;
-using Stegosaurus.Shard.Docker;
 using Stegosaurus.Shard.Net;
 
 namespace Stegosaurus.Shard;
 
 public class Worker : BackgroundService
 {
-    public static ILogger<Worker> _logger;
-    public static DockerClient client = new DockerClientConfiguration().CreateClient();
     public delegate Task<byte[]> RunDispatchListener();
+
+    public static ILogger<Worker> _logger;
+    public static List<string> queues = new()
+    {
+        "Creation",
+        "Deletion",
+        "Info"
+    };
+    public static DockerClient Client = new DockerClientConfiguration().CreateClient();
+
     public Worker(ILogger<Worker> logger)
     {
         _logger = logger;
     }
+
     /// <summary>
-    /// Main entrypoint, define the handler for rabbitmq and initialize
-    /// all the necessary files for configurations ecc.
-    /// After that create the connection and start the queue
+    ///     Main entrypoint, define the handler for rabbitmq and initialize
+    ///     all the necessary files for configurations ecc.
+    ///     After that create the connection and start the queue
     /// </summary>
     /// <param name="stoppingToken"></param>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var parameters = new CreateContainerParameters()
-        {
-
-            HostConfig = new HostConfig
-            {
-                PortBindings = new Dictionary<string, IList<PortBinding>>
-                {
-                    {
-                        "25565", new List<PortBinding>
-                        {
-                            new PortBinding { HostIP = "0.0.0.0", HostPort = "25565" }
-                        }
-                    }
-                }
-            },
-            ExposedPorts = new Dictionary<string, EmptyStruct>()
-            {
-                {
-                    "80", new EmptyStruct()
-                }
-            },
-        };
-        using (StreamWriter file = File.CreateText(@"C:\Users\thega\AppData\Roaming\StegoShard\full.json"))
-        {
-            JsonSerializer serializer = new JsonSerializer();
-            serializer.Serialize(file, parameters);
-        }
+        CancellationTokenSource cancelBroadcats = new CancellationTokenSource();
+        var handler = new RabbitHandler();
+        var init = new Init();
         
-        RabbitHandler handler = new RabbitHandler();
-        Init init = new Init();
-        List<string> queues = new List<string>
-        
-        {
-            "Creation",
-            "Deletion"
-        };
-        
-        
-        await init.Local();
+        await init.LocalFiles();
         var config = await init.Config();
-        ConnectionFactory factory = new ConnectionFactory
-        {
-            HostName = config.ip,
+        
+        var factory = new ConnectionFactory
+        {   
+            HostName = config.Ip,
+            UserName = "admin",
+            Password = "admin"
+            
         };
-        using var connection = await factory.CreateConnectionAsync();
-        using var channel = await connection.CreateChannelAsync();
-        while (!stoppingToken.IsCancellationRequested)
+        var connection = await factory.CreateConnectionAsync();
+        var channel = await connection.CreateChannelAsync();
+        var id = GenerateID.GetID().Result;
+        if (config.Broadcast)
         {
-            //TODO:MORE CHANNELS HANDLING AT ONCE?
-            var message = await handler.Receive(channel, queues);
-            await Task.Delay(0, stoppingToken);
+            Broadcast br = new Broadcast(id, channel);
+            Thread th = new Thread(new ThreadStart(br.BroadcastID));
+            th.Name ="Broadcast";
+            th.Start();
+        }
+        while (!stoppingToken.IsCancellationRequested)
+        { 
+            await handler.Receive(channel, queues, id);
+            await Task.Delay(5000, stoppingToken);
         }
     }
 }

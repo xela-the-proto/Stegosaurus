@@ -1,30 +1,31 @@
 ﻿using Docker.DotNet.Models;
 using Stegosaurus.Shard.Data;
 using Stegosaurus.Shard.Json;
-using Stegosaurus.Shard.Net;
 
 namespace Stegosaurus.Shard.Docker;
 
 public class Creator
 {
-    
     /// <summary>
-    /// Downloads the image of the container and then creates it, also checks if it exists.
+    ///     Downloads the image of the container and then creates it, also checks if it exists.
     /// </summary>
-    /// <param name="container"></param>
+    /// <param name="creator"></param>
     /// <exception cref="TimeoutException"></exception>
     public async Task CreateContainer(CreateContainerParameters creator)
     {
-        Container container = new Container();
-        JsonManager jsonManager = new JsonManager();
-        Finder finder = new Finder();
-        var client = Worker.client;
+        
+        var container = new Container();
+        var jsonManager = new JsonManager();
+        var finder = new Finder();
+        var client = Worker.Client;
         var logger = Worker._logger;
+        lock (client)
+        {
             //pull image from the docker repo
-            await client.Images.CreateImageAsync(
+            client.Images.CreateImageAsync(
                 new ImagesCreateParameters
                 {
-                    FromImage = creator.Image,
+                    FromImage = creator.Image
                 },
                 new AuthConfig
                 {
@@ -32,23 +33,26 @@ public class Creator
                     Username = null,
                     Password = null
                 },
-                new Progress<JSONMessage>(m => logger.LogInformation(m.ToString())));
+                new Progress<JSONMessage>(m => logger.LogInformation(m.ProgressMessage)));
 
             //gets the containers that match the name for checks
-            var currentContainers = finder.Find("name",creator.Name).Result;
-            //if we dont have any containers then we create
+            var currentContainers = finder.Find("name", creator.Name).Result;
+            //if we don't have any containers then we create
             if (!currentContainers.Any())
             {
                 logger.LogInformation("creating container with name " + creator.Name + " and image " + creator.Image);
-                CreateContainerResponse reply = await client.Containers.CreateContainerAsync(creator);
-                container.name = creator.Name;
-                container.image = creator.Image;
-                container.id = reply.ID;
+                var reply = client.Containers.CreateContainerAsync(creator).Result;
+                container.Name = creator.Name;
+                container.Image = creator.Image;
+                container.Id = reply.ID;
                 jsonManager.SaveContainerAsync(container);
                 //check if the same container exists
-            }else if (currentContainers[0].Names[0] == "/" + container.name && currentContainers[0].Image == container.image)
-            { 
+            }
+            else if (currentContainers[0].Names[0] == "/" + container.Name && currentContainers[0].Image == container.Image)
+            {
                 logger.LogWarning("Container exists!");
             }
+        }
+        
     }
 }

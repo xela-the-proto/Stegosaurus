@@ -7,45 +7,34 @@ namespace Stegosaurus.Shard.Net;
 
 public class RabbitHandler
 {
-
-    public async Task<byte[]> Receive(IChannel channel,List<string> queues)
+    public async Task<byte[]> Receive(IChannel channel, List<string> queues,string ID)
     {
-        await channel.QueueDeclareAsync(queue: queues[0], durable: false, exclusive: false, autoDelete: false, arguments: null);
-        Worker._logger.LogInformation("[" + DateTime.Now +  "] Waiting for messages on " + queues[0] + " queue");
-        await channel.QueueDeclareAsync(queue: queues[1], durable: false, exclusive: false, autoDelete: false, arguments: null);
-        Worker._logger.LogInformation("[" + DateTime.Now +  "] Waiting for messages on " + queues[1] + " queue");
-        
+        var queueDeclareResult = await channel.QueueDeclareAsync();
+        await channel.ExchangeDeclareAsync("dispatch", ExchangeType.Topic);
+        var queueName = queueDeclareResult.QueueName;
+        await channel.QueueBindAsync(queueName, "dispatch", ID + ".*");
+        Worker._logger.LogInformation("Waiting for message on exchange...");
         var consumer = new AsyncEventingBasicConsumer(channel);
         consumer.ReceivedAsync += Received;
-        channel.BasicAcksAsync += (sender, @event) =>
-        {
-            Worker._logger.LogInformation("ACK");
-            return Task.CompletedTask;
-        };
-        await channel.BasicConsumeAsync(queues[0],autoAck: true, consumer: consumer);
-        await channel.BasicConsumeAsync(queues[1],autoAck: true, consumer: consumer);
-        Thread.Sleep(5000);
+        await channel.BasicConsumeAsync(queueName, true, consumer);
         return null;
     }
 
 
-    Task Received(object sender, BasicDeliverEventArgs e)
+    private Task Received(object sender, BasicDeliverEventArgs e)
     {
-        Dispatcher dispatcher = new Dispatcher();
-        Packet packet = new Packet();
-        packet.message = e.RoutingKey;
+        var packet = new Packet();
+        Worker._logger.LogInformation(e.RoutingKey.LastIndexOf(@".").ToString());
+        packet.Message = e.RoutingKey.Substring(e.RoutingKey.LastIndexOf(@".") + 1);
         var body = e.Body.ToArray();
-        packet.data = Encoding.UTF8.GetString(body); 
+        packet.Data = Encoding.UTF8.GetString(body);
+        Worker._logger.LogInformation(packet.Data);
+        Worker._logger.LogInformation(packet.Message);
         //TODO: HANDLE CONCURRENT CONTAINER CREATION AND DELETION
-        if (e.RoutingKey == "Creation")
+        if (Worker.queues.Contains(packet.Message))
         {
-            Worker._logger.LogInformation(packet.data);
-            Task.WaitAll(Dispatcher.Dispatch(packet));
+            DockerDispatcher.DockerDispatch(packet);
         }
-        
-        
         return Task.CompletedTask;
     }
-    
-    
 }

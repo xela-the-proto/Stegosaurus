@@ -1,75 +1,73 @@
-﻿using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using Docker.DotNet.Models;
+﻿using Docker.DotNet.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Stegosaurus.Shard.Json;
 
-namespace Stegosaurus.Shard.Json;
+namespace Stegosaurus.Shard.Data;
 
 public class Deserializer
 {
     /// <summary>
-    /// Assess the type of class we got from a message and returns it
+    ///     Assess the type of class we got from a message and returns it
     /// </summary>
-    /// <param name="msg"></param>
-    /// <param name="deserialize"></param>
-    /// <returns></returns>
+    /// <param name="packet"></param>
+    /// <returns>Object thats been deserialized</returns>
     /// <exception cref="NullReferenceException"></exception>
     public async Task<object> AssessType(Packet packet)
     {
-        string request = packet.message;
-        object? cleaned_obj = JsonConvert.DeserializeObject(packet.data);
-        if (cleaned_obj is null)
+        var request = packet.Message;
+        var cleanedObj = JsonConvert.DeserializeObject(packet.Data);
+        if (cleanedObj is null) throw new NullReferenceException();
+        var cleanedJson = JObject.Parse(JsonConvert.SerializeObject(cleanedObj));
+
+
+        switch (request)
         {
-            throw new NullReferenceException();
+            case "Crea    tion":
+                Worker._logger.LogWarning("Found type id for jobject " + cleanedJson.First);
+                var cleanClass = _creation(cleanedJson);
+                return cleanClass;
+            case "shutdown":
+                Environment.Exit(1);
+                break;
+            case null:
+                Worker._logger.LogCritical("Badly formed packet exiting!");
+                Environment.Exit(2);
+                break;
         }
-        JObject cleaned_json = JObject.Parse(JsonConvert.SerializeObject(cleaned_obj));
-        
-        
-            switch (request)
-            {
-                case "Creation":
-                    Worker._logger.LogWarning("Found type id for jobject " + cleaned_json.First);
-                    CreateContainerParameters clean_class = this._creation(cleaned_json);
-                    return clean_class;
-                case "shutdown":
-                    Environment.Exit(1);
-                    break;
-                case null:
-                    Worker._logger.LogCritical("Badly formed packet exiting!");
-                    Environment.Exit(2);
-                    break;
-            }
-        
 
         return null;
     }
-    
+
     /// <summary>
-    /// single use class to convert the jobject to the actual class 
+    ///     single use classes to convert the jobject to the actual class
     /// </summary>
     /// <param name="jObject"></param>
     /// <returns></returns>
     private Container _container(JObject jObject)
     {
-        Json.Container container = new Json.Container();
+        var container = new Container();
         if (!jObject.ContainsKey("id"))
         {
-            container.id = null;
+            container.Id = null;
         }
-        container.name = jObject["name"].ToString().Normalize();
-        container.image = jObject["image"].ToString().Normalize();
+        container.Name = jObject["name"].ToString().Normalize();
+        container.Image = jObject["image"].ToString().Normalize();
 
         return container;
     }
+    
+    /// <summary>
+    ///     single use classes to convert the jobject to the actual class
+    /// </summary>
+    /// <param name="jObject"></param>
+    /// <returns></returns>
 
     public CreateContainerParameters _creation(JObject jObject)
     {
-        CreateContainerParameters creation = jObject.ToObject<CreateContainerParameters>();
-        //i ahev no clue why ti doesnt grab the name
+        var creation = jObject.ToObject<CreateContainerParameters>();
+        //i have no clue why it doesn't grab the name
         creation.Name = (string)jObject["Name"];
         return creation;
     }
-
 }
