@@ -6,12 +6,12 @@ using Stegosaurus.Shard.Net;
 
 namespace Stegosaurus.Shard;
 
-public class Init
+public class ConfigsHelper
 {
     /// <summary>
     ///     Check and if needed creates all the needed directories
     /// </summary>
-    public async Task LocalFiles()
+    public static async Task LocalFiles()
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
@@ -41,7 +41,7 @@ public class Init
     ///     creates the config files if they don't exist, else returns them
     /// </summary>
     /// <returns></returns>
-    public async Task<ShardConfig> Config()
+    public static async Task<ShardConfig> Config()
     {
         var serializer = new JsonSerializer();
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -54,13 +54,11 @@ public class Init
                     Username = "changeme",
                     Password = "changeme",
                     ShardID = GenerateID.Generate().Result,
-                    Broadcast = false
                 };
                 using (var stream = File.CreateText(JsonManager.WIN_ROOT + @"/configs/shard.json"))
                 {
                     serializer.Serialize(stream, shardConfig);
                 }
-                shardConfig.Broadcast = true;
                 return shardConfig;
             }
 

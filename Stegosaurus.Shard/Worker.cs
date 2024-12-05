@@ -32,10 +32,8 @@ public class Worker : BackgroundService
     {
         var args = Environment.GetCommandLineArgs();
         var handler = new RabbitHandler();
-        var init = new Init();
-        
-        await init.LocalFiles();
-        var config = await init.Config();
+        await ConfigsHelper.LocalFiles();
+        var config = await ConfigsHelper.Config();
         
         var factory = new ConnectionFactory
         {   
