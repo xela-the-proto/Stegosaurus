@@ -44,6 +44,7 @@ public class ConfigsHelper
     public static async Task<ShardConfig> Config()
     {
         var serializer = new JsonSerializer();
+        GenerateID id = new GenerateID();
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             if (!File.Exists(JsonManager.WIN_ROOT + @"/configs/shard.json"))
@@ -53,7 +54,7 @@ public class ConfigsHelper
                     Ip = "localhost",
                     Username = "changeme",
                     Password = "changeme",
-                    ShardID = GenerateID.Generate().Result,
+                    ShardID = id.Generate().Result,
                 };
                 using (var stream = File.CreateText(JsonManager.WIN_ROOT + @"/configs/shard.json"))
                 {

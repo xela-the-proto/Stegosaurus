@@ -9,7 +9,7 @@ namespace Stegosaurus.Shard.Net;
 
 public class GenerateID
 {
-    public static Task<string> Generate()
+    public Task<string> Generate()
     {
         string ID ="";
         var fieldOptions = new FieldOptionsTextWords();
@@ -20,10 +20,21 @@ public class GenerateID
         string word2 = randomWords.Generate();
         string iban = randomHex.Generate();
         ID = word1 + "-" + word2 + "-" + iban;
-        return Task.FromResult(ID);
+        string shuffled;
+        do
+        {
+            shuffled = new string(
+                ID
+                    .OrderBy(character => Guid.NewGuid())
+                    .ToArray()
+            );
+        } while (shuffled == ID);
+        var shuffled_trimmed = shuffled.Remove(35);
+        
+        return Task.FromResult(shuffled);
     }
 
-    public static Task<string> GetID()
+    public Task<string> GetID()
     {
         if (File.Exists(JsonManager.WIN_ROOT + "/configs/shard.json") && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {

@@ -31,23 +31,24 @@ public class Worker : BackgroundService
     /// <param name="stoppingToken"></param>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        GenerateID id = new GenerateID();
         var args = Environment.GetCommandLineArgs();
         var handler = new RabbitHandler();
         await ConfigsHelper.LocalFiles();
         var config = await ConfigsHelper.Config();
         var connection = RabbitMQHelpers.RabbitMQConnectionHelper().Result;
         var channel = await connection.CreateChannelAsync();
-        var id = GenerateID.GetID().Result;
+        var shard_id = id.GetID().Result;
         if (args.Contains("--discover"))
         {
-            Broadcast br = new Broadcast(id, channel);
+            Broadcast br = new Broadcast(shard_id, channel);
             Thread th = new Thread(br.BroadcastID);
             th.Name ="Broadcast";
             th.Start();
         }
         while (!stoppingToken.IsCancellationRequested)
         { 
-            await handler.Receive(channel, queues, id);
+            await handler.Receive(channel, queues, shard_id);
             await Task.Delay(5000, stoppingToken);
         }
     }
