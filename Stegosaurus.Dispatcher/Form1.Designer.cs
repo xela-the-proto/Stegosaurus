@@ -35,11 +35,12 @@ partial class Form1
         statusStrip1 = new System.Windows.Forms.StatusStrip();
         dbg_log = new System.Windows.Forms.RichTextBox();
         button1 = new System.Windows.Forms.Button();
+        txt_id = new System.Windows.Forms.TextBox();
         SuspendLayout();
         // 
         // btn_connect_exchange_windows
         // 
-        btn_connect_exchange_windows.Location = new System.Drawing.Point(12, 12);
+        btn_connect_exchange_windows.Location = new System.Drawing.Point(12, 41);
         btn_connect_exchange_windows.Name = "btn_connect_exchange_windows";
         btn_connect_exchange_windows.Size = new System.Drawing.Size(126, 25);
         btn_connect_exchange_windows.TabIndex = 0;
@@ -49,7 +50,7 @@ partial class Form1
         // 
         // btn_connect_exchange_linux
         // 
-        btn_connect_exchange_linux.Location = new System.Drawing.Point(12, 101);
+        btn_connect_exchange_linux.Location = new System.Drawing.Point(12, 130);
         btn_connect_exchange_linux.Name = "btn_connect_exchange_linux";
         btn_connect_exchange_linux.Size = new System.Drawing.Size(126, 23);
         btn_connect_exchange_linux.TabIndex = 1;
@@ -59,7 +60,7 @@ partial class Form1
         // 
         // btn_break_discovery
         // 
-        btn_break_discovery.Location = new System.Drawing.Point(12, 43);
+        btn_break_discovery.Location = new System.Drawing.Point(12, 72);
         btn_break_discovery.Name = "btn_break_discovery";
         btn_break_discovery.Size = new System.Drawing.Size(126, 23);
         btn_break_discovery.TabIndex = 2;
@@ -85,7 +86,7 @@ partial class Form1
         // 
         // button1
         // 
-        button1.Location = new System.Drawing.Point(12, 72);
+        button1.Location = new System.Drawing.Point(12, 101);
         button1.Name = "button1";
         button1.Size = new System.Drawing.Size(126, 23);
         button1.TabIndex = 5;
@@ -93,11 +94,20 @@ partial class Form1
         button1.UseVisualStyleBackColor = true;
         button1.Click += button1_Click;
         // 
+        // txt_id
+        // 
+        txt_id.Location = new System.Drawing.Point(12, 12);
+        txt_id.Name = "txt_id";
+        txt_id.Size = new System.Drawing.Size(126, 23);
+        txt_id.TabIndex = 6;
+        txt_id.Text = "ID shard";
+        // 
         // Form1
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         ClientSize = new System.Drawing.Size(800, 450);
+        Controls.Add(txt_id);
         Controls.Add(button1);
         Controls.Add(dbg_log);
         Controls.Add(statusStrip1);
@@ -109,6 +119,8 @@ partial class Form1
         ResumeLayout(false);
         PerformLayout();
     }
+
+    private System.Windows.Forms.TextBox txt_id;
 
     private System.Windows.Forms.Button button1;
 

@@ -1,5 +1,6 @@
 using Docker.DotNet;
 using RabbitMQ.Client;
+using Stegosaurus.Shard.Helpers;
 using Stegosaurus.Shard.Net;
 
 namespace Stegosaurus.Shard;
@@ -34,15 +35,7 @@ public class Worker : BackgroundService
         var handler = new RabbitHandler();
         await ConfigsHelper.LocalFiles();
         var config = await ConfigsHelper.Config();
-        
-        var factory = new ConnectionFactory
-        {   
-            HostName = config.Ip,
-            UserName = "admin",
-            Password = "admin"
-            
-        };
-        var connection = await factory.CreateConnectionAsync();
+        var connection = RabbitMQHelpers.RabbitMQConnectionHelper().Result;
         var channel = await connection.CreateChannelAsync();
         var id = GenerateID.GetID().Result;
         if (args.Contains("--discover"))

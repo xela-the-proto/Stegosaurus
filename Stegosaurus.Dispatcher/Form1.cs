@@ -23,10 +23,8 @@ public partial class Form1 : Form
         string msg;
         var factory = new ConnectionFactory
         {
-            HostName = "game.xela.space",
-            UserName = "admin",
-            Password = "admin"
-        };
+            HostName = "localhost",
+        }; 
         dbg_log.AppendText("[INFO] Connecting to RabbitMQ...\n");
         await using var connection = await factory.CreateConnectionAsync();
         await using var channel = await connection.CreateChannelAsync();
@@ -45,7 +43,7 @@ public partial class Form1 : Form
 
         var body = Encoding.UTF8.GetBytes(msg);
 
-        await channel.BasicPublishAsync("dispatch", "0.creation", body);
+        await channel.BasicPublishAsync("dispatch", txt_id.Text + ".creation", body);
         dbg_log.AppendText("[INFO] Sending message to RabbitMQ...\n");
     }
 
@@ -54,9 +52,8 @@ public partial class Form1 : Form
         string msg;
         var factory = new ConnectionFactory
         {
-            HostName = "game.xela.space",
-            UserName = "admin",
-            Password = "admin"
+            HostName = "localhost",
+            
         };
         await using var connection = await factory.CreateConnectionAsync();
         await using var channel = await connection.CreateChannelAsync();
@@ -75,7 +72,7 @@ public partial class Form1 : Form
 
         var body = Encoding.UTF8.GetBytes(msg);
 
-        await channel.BasicPublishAsync("dispatch", "1.creation", body);
+        await channel.BasicPublishAsync("dispatch", txt_id.Text + ".creation", body);
         Console.WriteLine($" [x] Sent {message}");
 
         Console.WriteLine(" Press [enter] to exit.");
@@ -85,9 +82,8 @@ public partial class Form1 : Form
     {
         var factory = new ConnectionFactory
         {
-            HostName = "192.168.1.140",
-            UserName = "admin",
-            Password = "admin"
+            HostName = "localhost",
+            
         };
         using var connection = await factory.CreateConnectionAsync();
         using var channel = await connection.CreateChannelAsync();

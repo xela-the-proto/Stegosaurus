@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using Stegosaurus.Shard.Helpers;
 using Stegosaurus.Shard.Json;
 
 namespace Stegosaurus.Shard.Net;
@@ -9,14 +10,16 @@ public class RabbitHandler
 {
     public async Task<byte[]> Receive(IChannel channel, List<string> queues,string ID)
     {
+        /*
         var queueDeclareResult = await channel.QueueDeclareAsync();
         await channel.ExchangeDeclareAsync("dispatch", ExchangeType.Topic);
         var queueName = queueDeclareResult.QueueName;
         await channel.QueueBindAsync(queueName, "dispatch", ID + ".*");
+        */
         Worker._logger.LogInformation("Waiting for message on exchange...");
-        var consumer = new AsyncEventingBasicConsumer(channel);
-        consumer.ReceivedAsync += Received;
-        await channel.BasicConsumeAsync(queueName, true, consumer);
+        var consumer = RabbitMQHelpers.RabbitMQReceiveHelper(channel, ID + ".*");
+        consumer.Result.Consumer.ReceivedAsync += Received;
+        await channel.BasicConsumeAsync(consumer.Result.QueueName, true, consumer.Result.Consumer);
         return null;
     }
 
