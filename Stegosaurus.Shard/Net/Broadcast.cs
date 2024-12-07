@@ -19,12 +19,14 @@ public class Broadcast
         bool break_broadcast = false;
         Worker._logger.LogWarning("Broadcasting to queue to register id...");
         
+        /*
         channel.BasicAcksAsync += (sender, @event) =>
         {
             Worker._logger.LogWarning("Received Ack stopping broadcast...");
             break_broadcast = true;
             return Task.CompletedTask;
         };
+        */
         while (!break_broadcast)
         {
             channel.BasicPublishAsync(exchange:"id", routingKey:"Discover",body:Encoding.UTF8.GetBytes(id));

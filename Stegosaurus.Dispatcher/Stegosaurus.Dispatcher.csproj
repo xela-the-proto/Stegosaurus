@@ -9,8 +9,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Dapper" Version="2.1.35" />
       <PackageReference Include="Docker.DotNet" Version="3.125.15" />
-      <PackageReference Include="MySqlConnector" Version="2.4.0" />
+      <PackageReference Include="MySql.Data" Version="9.1.0" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
       <PackageReference Include="RabbitMQ.Client" Version="7.0.0" />
       <PackageReference Include="RandomDataGenerator.Net" Version="1.0.18" />
