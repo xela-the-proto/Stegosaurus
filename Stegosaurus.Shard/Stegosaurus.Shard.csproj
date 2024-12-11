@@ -8,40 +8,45 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Dapper" Version="2.1.35" />
-        <PackageReference Include="Docker.DotNet" Version="3.125.15"/>
+        <PackageReference Include="Docker.DotNet" Version="3.125.15" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+          <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.0" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
         <PackageReference Include="MySql.Data" Version="9.1.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-        <PackageReference Include="RabbitMQ.Client" Version="7.0.0"/>
+        <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
+        <PackageReference Include="RabbitMQ.Client" Version="7.0.0" />
         <PackageReference Include="RandomDataGenerator.Net" Version="1.0.18" />
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Remove="DockerFIles\minecraft\**"/>
+        <Compile Remove="DockerFIles\minecraft\**" />
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Remove="DockerFIles\minecraft\**"/>
+        <EmbeddedResource Remove="DockerFIles\minecraft\**" />
     </ItemGroup>
 
     <ItemGroup>
-        <Content Remove="DockerFIles\minecraft\**"/>
+        <Content Remove="DockerFIles\minecraft\**" />
         <Content Include=".github\workflows\build.yml" />
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove="DockerFIles\minecraft\**"/>
+        <None Remove="DockerFIles\minecraft\**" />
     </ItemGroup>
 
     <ItemGroup>
-        <_ContentIncludedByDefault Remove="DockerFIles\minecraft\banned-ips.json"/>
-        <_ContentIncludedByDefault Remove="DockerFIles\minecraft\banned-players.json"/>
-        <_ContentIncludedByDefault Remove="DockerFIles\minecraft\ops.json"/>
-        <_ContentIncludedByDefault Remove="DockerFIles\minecraft\usercache.json"/>
-        <_ContentIncludedByDefault Remove="DockerFIles\minecraft\whitelist.json"/>
-        <_ContentIncludedByDefault Remove="DockerFIles\minecraft\world\advancements\ca27b1f4-f9dd-4f3f-8630-df42a1f1ca49.json"/>
-        <_ContentIncludedByDefault Remove="DockerFIles\minecraft\world\stats\ca27b1f4-f9dd-4f3f-8630-df42a1f1ca49.json"/>
+        <_ContentIncludedByDefault Remove="DockerFIles\minecraft\banned-ips.json" />
+        <_ContentIncludedByDefault Remove="DockerFIles\minecraft\banned-players.json" />
+        <_ContentIncludedByDefault Remove="DockerFIles\minecraft\ops.json" />
+        <_ContentIncludedByDefault Remove="DockerFIles\minecraft\usercache.json" />
+        <_ContentIncludedByDefault Remove="DockerFIles\minecraft\whitelist.json" />
+        <_ContentIncludedByDefault Remove="DockerFIles\minecraft\world\advancements\ca27b1f4-f9dd-4f3f-8630-df42a1f1ca49.json" />
+        <_ContentIncludedByDefault Remove="DockerFIles\minecraft\world\stats\ca27b1f4-f9dd-4f3f-8630-df42a1f1ca49.json" />
     </ItemGroup>
 
 </Project>

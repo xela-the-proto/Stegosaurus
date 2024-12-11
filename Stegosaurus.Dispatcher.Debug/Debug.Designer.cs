@@ -31,11 +31,55 @@ partial class Debug
     /// </summary>
     private void InitializeComponent()
     {
-        this.components = new System.ComponentModel.Container();
-        this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        this.ClientSize = new System.Drawing.Size(800, 450);
-        this.Text = "Debug";
+        listBox1 = new System.Windows.Forms.ListBox();
+        richTextBox1 = new System.Windows.Forms.RichTextBox();
+        textBox1 = new System.Windows.Forms.TextBox();
+        SuspendLayout();
+        // 
+        // listBox1
+        // 
+        listBox1.FormattingEnabled = true;
+        listBox1.ItemHeight = 15;
+        listBox1.Location = new System.Drawing.Point(511, 111);
+        listBox1.Name = "listBox1";
+        listBox1.Size = new System.Drawing.Size(120, 94);
+        listBox1.TabIndex = 0;
+        listBox1.SelectedIndexChanged += listBox1_SelectedIndexChanged;
+        // 
+        // richTextBox1
+        // 
+        richTextBox1.Location = new System.Drawing.Point(488, 288);
+        richTextBox1.Name = "richTextBox1";
+        richTextBox1.Size = new System.Drawing.Size(100, 96);
+        richTextBox1.TabIndex = 1;
+        richTextBox1.Text = "";
+        richTextBox1.TextChanged += richTextBox1_TextChanged;
+        // 
+        // textBox1
+        // 
+        textBox1.Location = new System.Drawing.Point(279, 203);
+        textBox1.Name = "textBox1";
+        textBox1.Size = new System.Drawing.Size(178, 23);
+        textBox1.TabIndex = 2;
+        // 
+        // Debug
+        // 
+        AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+        AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+        ClientSize = new System.Drawing.Size(800, 450);
+        Controls.Add(textBox1);
+        Controls.Add(richTextBox1);
+        Controls.Add(listBox1);
+        Text = "Debug";
+        ResumeLayout(false);
+        PerformLayout();
     }
+
+    private System.Windows.Forms.TextBox textBox1;
+
+    private System.Windows.Forms.RichTextBox richTextBox1;
+
+    private System.Windows.Forms.ListBox listBox1;
 
     #endregion
 }

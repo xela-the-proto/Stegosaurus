@@ -1,11 +1,10 @@
-﻿using Stegosaurus.Dispatcher.Main;
-using Terminal.Gui;
+﻿using Terminal.Gui;
 
 Application.Init();
 
 try
 {
-    Application.Run(new MyView());
+    Application.Run(new Connection.Connection());
 }
 finally
 {
