@@ -1,4 +1,4 @@
-﻿namespace Stegosaurus.Dispatcher.Json;
+﻿namespace Stegosaurus.Dispatcher.Debug.Json;
 
 /// <summary>
 ///     JSON cookie cutter class for config

@@ -1,10 +1,10 @@
 ﻿using System.Runtime.InteropServices;
 using Newtonsoft.Json;
-using Stegosaurus.Dispatcher.Json;
+using Stegosaurus.Dispatcher.Debug.Json;
 using Stegosaurus.Shard.Data;
 using Stegosaurus.Shard.Net;
 
-namespace Stegosaurus.Dispatcher.Helpers;
+namespace Stegosaurus.Dispatcher.Debug.Helpers;
 
 public class ConfigsHelper
 {

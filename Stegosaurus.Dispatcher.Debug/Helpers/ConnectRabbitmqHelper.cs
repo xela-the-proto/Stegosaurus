@@ -2,7 +2,7 @@ using System.Text;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
-namespace Stegosaurus.Dispatcher.Helpers;
+namespace Stegosaurus.Dispatcher.Debug.Helpers;
 
 public class RabbitMQHelpers
 {

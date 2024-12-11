@@ -1,4 +1,4 @@
-namespace Stegosaurus.Dispatcher.JSON;
+namespace Stegosaurus.Dispatcher.Debug.JSON;
 
 public class ThreadCanc
 {

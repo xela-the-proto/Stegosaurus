@@ -1,7 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using Newtonsoft.Json;
-using Stegosaurus.Dispatcher.Json;
-using Stegosaurus.Dispatcher.JSON;
+using Stegosaurus.Dispatcher.Debug.Json;
+using Stegosaurus.Dispatcher.Debug.JSON;
 
 namespace Stegosaurus.Shard.Data;
 

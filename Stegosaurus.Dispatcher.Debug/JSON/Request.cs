@@ -1,6 +1,6 @@
 ﻿using Docker.DotNet.Models;
 
-namespace Stegosaurus.Dispatcher.Json;
+namespace Stegosaurus.Dispatcher.Debug.Json;
 
 //TODO:RESPOND WITH HEALTH CHECKS?
 

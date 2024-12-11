@@ -1,4 +1,4 @@
-﻿namespace Stegosaurus.Dispatcher;
+﻿namespace Stegosaurus.Dispatcher.Debug;
 
 partial class Form1
 {
