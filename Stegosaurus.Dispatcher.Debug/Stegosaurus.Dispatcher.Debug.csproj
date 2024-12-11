@@ -16,4 +16,10 @@
       <PackageReference Include="RabbitMQ.Client" Version="7.0.0" />
       <PackageReference Include="RandomDataGenerator.Net" Version="1.0.18" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Debug.cs">
+        <SubType>Form</SubType>
+      </Compile>
+    </ItemGroup>
 </Project>

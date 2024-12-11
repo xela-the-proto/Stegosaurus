@@ -22,8 +22,18 @@ public class DockerDispatcher
             {
                 case "Creation":
                     var creator = new Creator();
-                    await creator.CreateContainer((CreateContainerParameters)deserializer.AssessType(packet).Result);
+                    var id = await creator.CreateContainer((CreateContainerParameters)deserializer.AssessType(packet).Result);
+                    var starter = new Starter();
+                    starter.Start(id);
                     return;
+                case "Deletion":
+                    throw new NotImplementedException();
+                case "Status":
+                    throw new NotImplementedException();
+                case "Start":
+                    throw new NotImplementedException();
+                case "Stop":
+                    throw new NotImplementedException();
             }
         }
         catch (SocketException e)

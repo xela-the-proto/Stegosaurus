@@ -11,7 +11,7 @@ public class Creator
     /// </summary>
     /// <param name="creator"></param>
     /// <exception cref="TimeoutException"></exception>
-    public async Task CreateContainer(CreateContainerParameters creator)
+    public async Task<string> CreateContainer(CreateContainerParameters creator)
     {
         
         var container = new Container();
@@ -46,13 +46,15 @@ public class Creator
                 container.Image = creator.Image;
                 container.Id = reply.ID;
                 jsonManager.SaveContainerAsync(container);
-                //check if the same container exists
+                return container.Id;
             }
+            //check if the same container exists
             else if (currentContainers[0].Names[0] == "/" + container.Name && currentContainers[0].Image == container.Image)
             {
                 logger.LogWarning("Container exists!");
             }
         }
-        
+
+        return null;
     }
 }

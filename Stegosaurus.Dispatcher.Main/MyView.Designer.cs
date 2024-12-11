@@ -21,6 +21,8 @@ namespace Stegosaurus.Dispatcher.Main {
         
         private Terminal.Gui.ColorScheme greenOnBlack;
         
+        private Terminal.Gui.TextView textView;
+        
         private Terminal.Gui.TextField txt_address;
         
         private Terminal.Gui.Button btn_connect;
@@ -33,6 +35,7 @@ namespace Stegosaurus.Dispatcher.Main {
             this.statusBar = new Terminal.Gui.StatusBar();
             this.btn_connect = new Terminal.Gui.Button();
             this.txt_address = new Terminal.Gui.TextField();
+            this.textView = new Terminal.Gui.TextView();
             this.greyOnBlack = new Terminal.Gui.ColorScheme();
             this.greyOnBlack.Normal = new Terminal.Gui.Attribute(Terminal.Gui.Color.DarkGray, Terminal.Gui.Color.Black);
             this.greyOnBlack.HotNormal = new Terminal.Gui.Attribute(Terminal.Gui.Color.DarkGray, Terminal.Gui.Color.Black);
@@ -66,6 +69,18 @@ namespace Stegosaurus.Dispatcher.Main {
             this.Border.DrawMarginFrame = true;
             this.TextAlignment = Terminal.Gui.TextAlignment.Left;
             this.Title = "Press Ctrl+Q to quit";
+            this.textView.Width = 55;
+            this.textView.Height = 20;
+            this.textView.X = 151;
+            this.textView.Y = 0;
+            this.textView.Visible = true;
+            this.textView.AllowsTab = true;
+            this.textView.AllowsReturn = true;
+            this.textView.WordWrap = false;
+            this.textView.Data = "textView";
+            this.textView.Text = "He\t\t\ty\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t";
+            this.textView.TextAlignment = Terminal.Gui.TextAlignment.Left;
+            this.Add(this.textView);
             this.txt_address.Width = 25;
             this.txt_address.Height = 1;
             this.txt_address.X = 89;

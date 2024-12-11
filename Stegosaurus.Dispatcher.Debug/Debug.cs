@@ -1,10 +1,20 @@
-using System.ComponentModel.Design.Serialization;
+namespace Stegosaurus.Dispatcher.Debug;
+
+public partial class Debug : Form
+{
+    public Debug()
+    {
+        InitializeComponent();
+    }
+}
+/*
+ * using System.ComponentModel.Design.Serialization;
 using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using Stegosaurus.Dispatcher.JSON;
+using Stegosaurus.Dispatcher.Debug.JSON;
 
 namespace Stegosaurus.Dispatcher;
 
@@ -15,7 +25,6 @@ public partial class Form1 : Form
     public StatusStrip statusStrip;
     public Form1()
     {
-        InitializeComponent();
     }
 
     private async void btn_connect_exchange_windows_Click(object sender, EventArgs e)
@@ -25,6 +34,7 @@ public partial class Form1 : Form
         {
             HostName = "localhost",
         }; 
+        
         dbg_log.AppendText("[INFO] Connecting to RabbitMQ...\n");
         await using var connection = await factory.CreateConnectionAsync();
         await using var channel = await connection.CreateChannelAsync();
@@ -145,4 +155,19 @@ public partial class Form1 : Form
     {
         ThreadPool.QueueUserWorkItem(ReceiveIDs, CANCEL_BROADCAST.Token);
     }
+
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
+    private void InitializeComponent()
+    {
+        SuspendLayout();
+        // 
+        // Form1
+        // 
+        ClientSize = new System.Drawing.Size(648, 451);
+        ResumeLayout(false);
+    }
 }
+*/
