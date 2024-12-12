@@ -1,5 +1,6 @@
 ﻿using Docker.DotNet.Models;
 using Stegosaurus.Shard.Data;
+using Stegosaurus.Shard.db;
 using Stegosaurus.Shard.Json;
 
 namespace Stegosaurus.Shard.Docker;
@@ -13,7 +14,7 @@ public class Creator
     /// <exception cref="TimeoutException"></exception>
     public async Task<string> CreateContainer(CreateContainerParameters creator)
     {
-        
+        using var db_shard = new EFManagerGameServers();
         var container = new Container();
         var jsonManager = new JsonManager();
         var finder = new Finder();
@@ -46,7 +47,16 @@ public class Creator
                 container.Image = creator.Image;
                 container.Id = reply.ID;
                 jsonManager.SaveContainerAsync(container);
+                db_shard.Add(new gameservers
+                {
+                    container_id = container.Id,
+                    updated_at = DateTime.Now,
+                    created_at = DateTime.Now,
+                    id = 1,
+                    shard_id = ConfigsHelper.Config().Result.ShardID
+                });
                 return container.Id;
+                
             }
             //check if the same container exists
             else if (currentContainers[0].Names[0] == "/" + container.Name && currentContainers[0].Image == container.Image)
@@ -54,7 +64,7 @@ public class Creator
                 logger.LogWarning("Container exists!");
             }
         }
-
+        
         return null;
     }
 }
