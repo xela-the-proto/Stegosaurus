@@ -7,8 +7,8 @@ namespace Stegosaurus.Shard.db;
 public class EFManagerGameServers : DbContext
 {
     public DbSet<gameservers>  Gameservers { get; set; }
-    
-    static string connectionString = "server=game.xela.space;user=xela;password=antD)nIo3]dKvp7K;database=Development";
+
+    private static string connectionString = ConfigurationManager.ConnectionStrings["DevDB"].ConnectionString; 
     MariaDbServerVersion serverVersion = new MariaDbServerVersion(ServerVersion.AutoDetect(connectionString));
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
