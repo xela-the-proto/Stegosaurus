@@ -47,13 +47,13 @@ public class Creator
                 container.Image = creator.Image;
                 container.Id = reply.ID;
                 jsonManager.SaveContainerAsync(container);
-                db_shard.Add(new gameservers
+                db_shard.Add(new GameServers
                 {
                     container_id = container.Id,
                     updated_at = DateTime.Now,
                     created_at = DateTime.Now,
                     id = 1,
-                    shard_id = ConfigsHelper.Config().Result.ShardID
+                    status = Status.created
                 });
                 return container.Id;
                 

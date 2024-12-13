@@ -7,9 +7,8 @@ namespace Stegosaurus.Shard;
 
 public class Worker : BackgroundService
 {
-    public delegate Task<byte[]> RunDispatchListener();
-
     public static ILogger<Worker> _logger;
+    
     public static List<string> queues = new()
     {
         "Creation",
@@ -35,10 +34,10 @@ public class Worker : BackgroundService
         var args = Environment.GetCommandLineArgs();
         var handler = new RabbitHandler();
         await ConfigsHelper.LocalFiles();
-        var config = await ConfigsHelper.Config();
         var connection = RabbitMQHelpers.RabbitMQConnectionHelper().Result;
         var channel = await connection.CreateChannelAsync();
         var shard_id = id.GetID().Result;
+        
         if (args.Contains("--discover"))
         {
             Broadcast br = new Broadcast(shard_id, channel);
@@ -46,6 +45,7 @@ public class Worker : BackgroundService
             th.Name ="Broadcast";
             th.Start();
         }
+        
         while (!stoppingToken.IsCancellationRequested)
         { 
             await handler.Receive(channel, queues, shard_id);

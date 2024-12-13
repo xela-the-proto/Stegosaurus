@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using System.Configuration;
 using ConfigurationManager = System.Configuration.ConfigurationManager;
@@ -6,7 +7,7 @@ namespace Stegosaurus.Shard.db;
 
 public class EFManagerGameServers : DbContext
 {
-    public DbSet<gameservers>  Gameservers { get; set; }
+    public DbSet<GameServers>  Gameservers { get; set; }
 
     private static string connectionString = ConfigurationManager.ConnectionStrings["DevDB"].ConnectionString; 
     MariaDbServerVersion serverVersion = new MariaDbServerVersion(ServerVersion.AutoDetect(connectionString));
@@ -19,20 +20,28 @@ public class EFManagerGameServers : DbContext
 }
 
 
-public class gameservers
+public class GameServers
 {
-    public int id { get; set; }
     public string shard_id { get; set; }
     public string container_id { get; set; }
-    
-    public status status { get; set; }
+    public Status status { get; set; }
     public DateTime created_at { get; set; }
     public DateTime updated_at { get; set; }
+    [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+    public int id { get; set; }
 }
 
-public enum status
+public class Shard
+{
+    public string shard_id { get; set; }
+    public List<GameServers> GameserversList { get; set; }
+    public string ip { get; set; }
+}
+
+public enum Status
 {
     running,
     stopped,
-    error
+    error,
+    created
 }
