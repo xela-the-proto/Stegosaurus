@@ -21,8 +21,8 @@ public class RabbitHandler
     private Task Received(object sender, BasicDeliverEventArgs e)
     {
         var packet = new Packet();
-        Worker._logger.LogInformation(e.RoutingKey.LastIndexOf(@".").ToString());
-        packet.Message = e.RoutingKey.Substring(e.RoutingKey.LastIndexOf(@".") + 1);
+        Worker._logger.LogInformation(e.RoutingKey.IndexOf(@".").ToString());
+        packet.Message = e.RoutingKey.Substring(e.RoutingKey.IndexOf(@".") + 1);
         var body = e.Body.ToArray();
         packet.Data = Encoding.UTF8.GetString(body);
         Worker._logger.LogInformation(packet.Data);

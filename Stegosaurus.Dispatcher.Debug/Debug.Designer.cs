@@ -31,55 +31,118 @@ partial class Debug
     /// </summary>
     private void InitializeComponent()
     {
-        listBox1 = new System.Windows.Forms.ListBox();
-        richTextBox1 = new System.Windows.Forms.RichTextBox();
-        textBox1 = new System.Windows.Forms.TextBox();
+        dbg_log = new System.Windows.Forms.RichTextBox();
+        txt_id = new System.Windows.Forms.TextBox();
+        btn_break_discovery = new System.Windows.Forms.Button();
+        btn_start_discovery = new System.Windows.Forms.Button();
+        btn_connect_win = new System.Windows.Forms.Button();
+        btn_connect_lin = new System.Windows.Forms.Button();
+        btn_start = new System.Windows.Forms.Button();
+        txt_container_id = new System.Windows.Forms.TextBox();
         SuspendLayout();
         // 
-        // listBox1
+        // dbg_log
         // 
-        listBox1.FormattingEnabled = true;
-        listBox1.ItemHeight = 15;
-        listBox1.Location = new System.Drawing.Point(511, 111);
-        listBox1.Name = "listBox1";
-        listBox1.Size = new System.Drawing.Size(120, 94);
-        listBox1.TabIndex = 0;
-        listBox1.SelectedIndexChanged += listBox1_SelectedIndexChanged;
+        dbg_log.Location = new System.Drawing.Point(451, 12);
+        dbg_log.Name = "dbg_log";
+        dbg_log.Size = new System.Drawing.Size(337, 426);
+        dbg_log.TabIndex = 1;
+        dbg_log.Text = "";
         // 
-        // richTextBox1
+        // txt_id
         // 
-        richTextBox1.Location = new System.Drawing.Point(488, 288);
-        richTextBox1.Name = "richTextBox1";
-        richTextBox1.Size = new System.Drawing.Size(100, 96);
-        richTextBox1.TabIndex = 1;
-        richTextBox1.Text = "";
-        richTextBox1.TextChanged += richTextBox1_TextChanged;
+        txt_id.Location = new System.Drawing.Point(12, 12);
+        txt_id.Name = "txt_id";
+        txt_id.Size = new System.Drawing.Size(123, 23);
+        txt_id.TabIndex = 2;
+        txt_id.Text = "ShardId";
         // 
-        // textBox1
+        // btn_break_discovery
         // 
-        textBox1.Location = new System.Drawing.Point(279, 203);
-        textBox1.Name = "textBox1";
-        textBox1.Size = new System.Drawing.Size(178, 23);
-        textBox1.TabIndex = 2;
+        btn_break_discovery.Location = new System.Drawing.Point(12, 41);
+        btn_break_discovery.Name = "btn_break_discovery";
+        btn_break_discovery.Size = new System.Drawing.Size(123, 23);
+        btn_break_discovery.TabIndex = 3;
+        btn_break_discovery.Text = "Break discovery";
+        btn_break_discovery.UseVisualStyleBackColor = true;
+        btn_break_discovery.Click += btn_break_discovery_Click_1;
+        // 
+        // btn_start_discovery
+        // 
+        btn_start_discovery.Location = new System.Drawing.Point(12, 70);
+        btn_start_discovery.Name = "btn_start_discovery";
+        btn_start_discovery.Size = new System.Drawing.Size(123, 23);
+        btn_start_discovery.TabIndex = 4;
+        btn_start_discovery.Text = "Start discovery";
+        btn_start_discovery.UseVisualStyleBackColor = true;
+        // 
+        // btn_connect_win
+        // 
+        btn_connect_win.Location = new System.Drawing.Point(12, 99);
+        btn_connect_win.Name = "btn_connect_win";
+        btn_connect_win.Size = new System.Drawing.Size(123, 23);
+        btn_connect_win.TabIndex = 5;
+        btn_connect_win.Text = "Connect win";
+        btn_connect_win.UseVisualStyleBackColor = true;
+        btn_connect_win.Click += btn_connect_win_Click;
+        // 
+        // btn_connect_lin
+        // 
+        btn_connect_lin.Location = new System.Drawing.Point(12, 128);
+        btn_connect_lin.Name = "btn_connect_lin";
+        btn_connect_lin.Size = new System.Drawing.Size(123, 23);
+        btn_connect_lin.TabIndex = 6;
+        btn_connect_lin.Text = "Connect lin";
+        btn_connect_lin.UseVisualStyleBackColor = true;
+        btn_connect_lin.Click += btn_connect_lin_Click;
+        // 
+        // btn_start
+        // 
+        btn_start.Location = new System.Drawing.Point(12, 157);
+        btn_start.Name = "btn_start";
+        btn_start.Size = new System.Drawing.Size(123, 23);
+        btn_start.TabIndex = 7;
+        btn_start.Text = "Start container";
+        btn_start.UseVisualStyleBackColor = true;
+        // 
+        // txt_container_id
+        // 
+        txt_container_id.Location = new System.Drawing.Point(141, 12);
+        txt_container_id.Name = "txt_container_id";
+        txt_container_id.Size = new System.Drawing.Size(100, 23);
+        txt_container_id.TabIndex = 8;
+        txt_container_id.Text = "ContainerId";
         // 
         // Debug
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         ClientSize = new System.Drawing.Size(800, 450);
-        Controls.Add(textBox1);
-        Controls.Add(richTextBox1);
-        Controls.Add(listBox1);
+        Controls.Add(txt_container_id);
+        Controls.Add(btn_start);
+        Controls.Add(btn_connect_lin);
+        Controls.Add(btn_connect_win);
+        Controls.Add(btn_start_discovery);
+        Controls.Add(btn_break_discovery);
+        Controls.Add(txt_id);
+        Controls.Add(dbg_log);
         Text = "Debug";
         ResumeLayout(false);
         PerformLayout();
     }
 
-    private System.Windows.Forms.TextBox textBox1;
+    private System.Windows.Forms.Button btn_start;
+    private System.Windows.Forms.TextBox txt_container_id;
 
-    private System.Windows.Forms.RichTextBox richTextBox1;
+    private System.Windows.Forms.Button btn_start_discovery;
+    private System.Windows.Forms.Button btn_connect_win;
+    private System.Windows.Forms.Button btn_connect_lin;
 
-    private System.Windows.Forms.ListBox listBox1;
+    private System.Windows.Forms.Button btn_break_discovery;
+
+    private System.Windows.Forms.TextBox txt_id;
+
+    private System.Windows.Forms.RichTextBox dbg_log;
 
     #endregion
 }

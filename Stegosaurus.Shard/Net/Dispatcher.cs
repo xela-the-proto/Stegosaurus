@@ -29,7 +29,8 @@ public class DockerDispatcher
                 case "Status":
                     throw new NotImplementedException();
                 case "Start":
-                    throw new NotImplementedException();
+                    var starter = new Starter();
+                    return;
                 case "Stop":
                     throw new NotImplementedException();
             }

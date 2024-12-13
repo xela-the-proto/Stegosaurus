@@ -1,24 +1,3 @@
-namespace Stegosaurus.Dispatcher.Debug;
-
-public partial class Debug : Form
-{
-    public Debug()
-    {
-        InitializeComponent();
-    }
-
-    private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        
-    }
-
-    private void richTextBox1_TextChanged(object sender, EventArgs e)
-    {
-        
-    }
-}
-/*
- * using System.ComponentModel.Design.Serialization;
 using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -26,76 +5,16 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using Stegosaurus.Dispatcher.Debug.JSON;
 
-namespace Stegosaurus.Dispatcher;
+namespace Stegosaurus.Dispatcher.Debug;
 
-public partial class Form1 : Form
+public partial class Debug : Form
 {
     public static Dictionary<string, ThreadCanc> threadDictionary = new Dictionary<string, ThreadCanc>();
     public static CancellationTokenSource CANCEL_BROADCAST = new CancellationTokenSource();
     public StatusStrip statusStrip;
-    public Form1()
+    public Debug()
     {
-    }
-
-    private async void btn_connect_exchange_windows_Click(object sender, EventArgs e)
-    {
-        string msg;
-        var factory = new ConnectionFactory
-        {
-            HostName = "localhost",
-        }; 
-        
-        dbg_log.AppendText("[INFO] Connecting to RabbitMQ...\n");
-        await using var connection = await factory.CreateConnectionAsync();
-        await using var channel = await connection.CreateChannelAsync();
-
-        await channel.ExchangeDeclareAsync("dispatch", ExchangeType.Topic);
-        dbg_log.AppendText("[INFO] Declaring exchange to RabbitMQ...\n");
-
-        //await channel.QueueDeclareAsync(queue: "Creation", durable: false, exclusive: false, autoDelete: false, arguments: null);
-        // read JSON directly from a file
-        using (var file = File.OpenText(@"C:\Users\thega\AppData\Roaming\StegoShard\request.json"))
-        using (var reader = new JsonTextReader(file))
-        {
-            var o2 = (JObject)JToken.ReadFrom(reader);
-            msg = o2.ToString();
-        }
-
-        var body = Encoding.UTF8.GetBytes(msg);
-
-        await channel.BasicPublishAsync("dispatch", txt_id.Text + ".creation", body);
-        dbg_log.AppendText("[INFO] Sending message to RabbitMQ...\n");
-    }
-
-    private async void btn_connect_exchange_linux_Click(object sender, EventArgs e)
-    {
-        string msg;
-        var factory = new ConnectionFactory
-        {
-            HostName = "localhost",
-            
-        };
-        await using var connection = await factory.CreateConnectionAsync();
-        await using var channel = await connection.CreateChannelAsync();
-
-        await channel.ExchangeDeclareAsync("dispatch", ExchangeType.Topic);
-        //await channel.QueueDeclareAsync(queue: "Creation", durable: false, exclusive: false, autoDelete: false, arguments: null);
-
-        const string message = "Hello World!";
-        // read JSON directly from a file
-        using (var file = File.OpenText(@"C:\Users\thega\AppData\Roaming\StegoShard\request.json"))
-        using (var reader = new JsonTextReader(file))
-        {
-            var o2 = (JObject)JToken.ReadFrom(reader);
-            msg = o2.ToString();
-        }
-
-        var body = Encoding.UTF8.GetBytes(msg);
-
-        await channel.BasicPublishAsync("dispatch", txt_id.Text + ".creation", body);
-        Console.WriteLine($" [x] Sent {message}");
-
-        Console.WriteLine(" Press [enter] to exit.");
+        InitializeComponent();
     }
     
     private async void ReceiveIDs(object? state)
@@ -142,42 +61,76 @@ public partial class Form1 : Form
         }
     }
 
+    private void btn_break_discovery_Click_1(object sender, EventArgs e)
+    {
+        dbg_log.AppendText("[CRITICAL] Killing discovery...\n");
+        CANCEL_BROADCAST.Cancel();
+        CANCEL_BROADCAST.Dispose();    
+    }
+
+    private async void btn_connect_win_Click(object sender, EventArgs e)
+    {
+        string msg;
+        var factory = new ConnectionFactory
+        {
+            HostName = "localhost",
+        }; 
+        
+        dbg_log.AppendText("[INFO] Connecting to RabbitMQ...\n");
+        await using var connection = await factory.CreateConnectionAsync();
+        await using var channel = await connection.CreateChannelAsync();
+
+        await channel.ExchangeDeclareAsync("dispatch", ExchangeType.Topic);
+        dbg_log.AppendText("[INFO] Declaring exchange to RabbitMQ...\n");
+
+        //await channel.QueueDeclareAsync(queue: "Creation", durable: false, exclusive: false, autoDelete: false, arguments: null);
+        // read JSON directly from a file
+        using (var file = File.OpenText(@"C:\Users\thega\AppData\Roaming\StegoShard\request.json"))
+        using (var reader = new JsonTextReader(file))
+        {
+            var o2 = (JObject)JToken.ReadFrom(reader);
+            msg = o2.ToString();
+        }
+
+        var body = Encoding.UTF8.GetBytes(msg);
+
+        await channel.BasicPublishAsync("dispatch", txt_id.Text + ".start." + txt_container_id.Text, body);
+        dbg_log.AppendText("[INFO] Sending message to RabbitMQ...\n");
+    }
+
+    private async void btn_connect_lin_Click(object sender, EventArgs e)
+    {
+        string msg;
+        var factory = new ConnectionFactory
+        {
+            HostName = "localhost",
+            
+        };
+        await using var connection = await factory.CreateConnectionAsync();
+        await using var channel = await connection.CreateChannelAsync();
+
+        await channel.ExchangeDeclareAsync("dispatch", ExchangeType.Topic);
+        //await channel.QueueDeclareAsync(queue: "Creation", durable: false, exclusive: false, autoDelete: false, arguments: null);
+
+        const string message = "Hello World!";
+        // read JSON directly from a file
+        using (var file = File.OpenText(@"C:\Users\thega\AppData\Roaming\StegoShard\request.json"))
+        using (var reader = new JsonTextReader(file))
+        {
+            var o2 = (JObject)JToken.ReadFrom(reader);
+            msg = o2.ToString();
+        }
+
+        var body = Encoding.UTF8.GetBytes(msg);
+
+        await channel.BasicPublishAsync("dispatch", txt_id.Text + ".creation", body);
+        Console.WriteLine($" [x] Sent {message}");
+
+        Console.WriteLine(" Press [enter] to exit.");
+    }
+    
     private void StoreID(string message)
     {
         
     }
-
-    private void Form1_Load(object sender, EventArgs e)
-    {
-        statusStrip = statusStrip1;
-        statusStrip.Items.Add(new ToolStripLabel("Status"));
-    }
-
-
-    private void btn_break_discovery_Click(object sender, EventArgs e)
-    {
-        dbg_log.AppendText("[CRITICAL] Killing discovery...\n");
-        CANCEL_BROADCAST.Cancel();
-        CANCEL_BROADCAST.Dispose();
-    }
-
-    private void button1_Click(object sender, EventArgs e)
-    {
-        ThreadPool.QueueUserWorkItem(ReceiveIDs, CANCEL_BROADCAST.Token);
-    }
-
-    /// <summary>
-    /// Required method for Designer support - do not modify
-    /// the contents of this method with the code editor.
-    /// </summary>
-    private void InitializeComponent()
-    {
-        SuspendLayout();
-        // 
-        // Form1
-        // 
-        ClientSize = new System.Drawing.Size(648, 451);
-        ResumeLayout(false);
-    }
 }
-*/
