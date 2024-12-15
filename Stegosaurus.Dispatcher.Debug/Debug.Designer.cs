@@ -84,7 +84,6 @@ partial class Debug
         btn_connect_win.TabIndex = 5;
         btn_connect_win.Text = "Connect win";
         btn_connect_win.UseVisualStyleBackColor = true;
-        btn_connect_win.Click += btn_connect_win_Click;
         // 
         // btn_connect_lin
         // 
@@ -104,6 +103,7 @@ partial class Debug
         btn_start.TabIndex = 7;
         btn_start.Text = "Start container";
         btn_start.UseVisualStyleBackColor = true;
+        btn_start.Click += btn_start_Click;
         // 
         // txt_container_id
         // 

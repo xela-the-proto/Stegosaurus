@@ -20,18 +20,18 @@ public class DockerDispatcher
         {
             switch (packet.Message)
             {
-                case "Creation":
+                case "creation":
                     var creator = new Creator();
                     var id = await creator.CreateContainer((CreateContainerParameters)deserializer.AssessType(packet).Result);
                     return;
-                case "Deletion":
+                case "deletion":
                     throw new NotImplementedException();
-                case "Status":
+                case "status":
                     throw new NotImplementedException();
-                case "Start":
+                case "start":
                     var starter = new Starter();
                     return;
-                case "Stop":
+                case "stop":
                     throw new NotImplementedException();
             }
         }

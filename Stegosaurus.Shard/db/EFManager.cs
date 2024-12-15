@@ -9,7 +9,7 @@ public class EFManagerGameServers : DbContext
 {
     public DbSet<GameServers>  Gameservers { get; set; }
 
-    private static string connectionString = ConfigurationManager.ConnectionStrings["DevDB"].ConnectionString; 
+    private static string connectionString = ConfigsHelper.Config().Result.ConnectionString;
     MariaDbServerVersion serverVersion = new MariaDbServerVersion(ServerVersion.AutoDetect(connectionString));
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

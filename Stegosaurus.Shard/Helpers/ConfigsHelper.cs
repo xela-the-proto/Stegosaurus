@@ -55,6 +55,7 @@ public class ConfigsHelper
                     Username = "changeme",
                     Password = "changeme",
                     ShardID = id.Generate().Result,
+                    ConnectionString = "Server=127.0.0.1;Port=3306;Database=test;User ID=root;Password=password;"
                 };
                 using (var stream = File.CreateText(JsonManager.WIN_ROOT + @"/configs/shard.json"))
                 {

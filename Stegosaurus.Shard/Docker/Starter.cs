@@ -1,9 +1,11 @@
-﻿namespace Stegosaurus.Shard.Docker;
+﻿using Docker.DotNet.Models;
+
+namespace Stegosaurus.Shard.Docker;
 
 public class Starter
 {
-    public Task Start(string id)
+    public async Task Start(string id)
     {
-        return Task.CompletedTask;
+        await Worker.Client.Containers.StartContainerAsync(id,new ContainerStartParameters());
     }
 }

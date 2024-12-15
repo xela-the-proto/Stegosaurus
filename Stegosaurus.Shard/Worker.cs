@@ -1,7 +1,9 @@
+using System.Configuration;
 using Docker.DotNet;
 using RabbitMQ.Client;
 using Stegosaurus.Shard.Helpers;
 using Stegosaurus.Shard.Net;
+using ConfigurationManager = System.Configuration.ConfigurationManager;
 
 namespace Stegosaurus.Shard;
 
@@ -11,10 +13,12 @@ public class Worker : BackgroundService
     
     public static List<string> queues = new()
     {
-        "Creation",
-        "Deletion",
-        "Info"
+        "creation",
+        "deletion",
+        "info"
     };
+
+    private static string connectionString = ConfigurationManager.ConnectionStrings[0].ConnectionString;
     public static DockerClient Client = new DockerClientConfiguration().CreateClient();
 
     public Worker(ILogger<Worker> logger)
@@ -30,6 +34,7 @@ public class Worker : BackgroundService
     /// <param name="stoppingToken"></param>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        _logger.LogCritical(connectionString);
         GenerateID id = new GenerateID();
         var args = Environment.GetCommandLineArgs();
         var handler = new RabbitHandler();

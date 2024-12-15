@@ -1,4 +1,5 @@
 using System.Text;
+using Google.Protobuf.WellKnownTypes;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RabbitMQ.Client;
@@ -67,43 +68,12 @@ public partial class Debug : Form
         CANCEL_BROADCAST.Cancel();
         CANCEL_BROADCAST.Dispose();    
     }
-
-    private async void btn_connect_win_Click(object sender, EventArgs e)
-    {
-        string msg;
-        var factory = new ConnectionFactory
-        {
-            HostName = "localhost",
-        }; 
-        
-        dbg_log.AppendText("[INFO] Connecting to RabbitMQ...\n");
-        await using var connection = await factory.CreateConnectionAsync();
-        await using var channel = await connection.CreateChannelAsync();
-
-        await channel.ExchangeDeclareAsync("dispatch", ExchangeType.Topic);
-        dbg_log.AppendText("[INFO] Declaring exchange to RabbitMQ...\n");
-
-        //await channel.QueueDeclareAsync(queue: "Creation", durable: false, exclusive: false, autoDelete: false, arguments: null);
-        // read JSON directly from a file
-        using (var file = File.OpenText(@"C:\Users\thega\AppData\Roaming\StegoShard\request.json"))
-        using (var reader = new JsonTextReader(file))
-        {
-            var o2 = (JObject)JToken.ReadFrom(reader);
-            msg = o2.ToString();
-        }
-
-        var body = Encoding.UTF8.GetBytes(msg);
-
-        await channel.BasicPublishAsync("dispatch", txt_id.Text + ".start." + txt_container_id.Text, body);
-        dbg_log.AppendText("[INFO] Sending message to RabbitMQ...\n");
-    }
-
     private async void btn_connect_lin_Click(object sender, EventArgs e)
     {
         string msg;
         var factory = new ConnectionFactory
         {
-            HostName = "localhost",
+            HostName = "servers.xela.space",
             
         };
         await using var connection = await factory.CreateConnectionAsync();
@@ -132,5 +102,33 @@ public partial class Debug : Form
     private void StoreID(string message)
     {
         
+    }
+
+    private async void btn_start_Click(object sender, EventArgs e)
+    {
+        string msg;
+        var factory = new ConnectionFactory
+        {
+            HostName = "servers.xela.space",
+        }; 
+        
+        dbg_log.AppendText("[INFO] Connecting to RabbitMQ...\n");
+        await using var connection = await factory.CreateConnectionAsync();
+        await using var channel = await connection.CreateChannelAsync();
+
+        await channel.ExchangeDeclareAsync("dispatch", ExchangeType.Topic);
+        dbg_log.AppendText("[INFO] Declaring exchange to RabbitMQ...\n");
+
+        //await channel.QueueDeclareAsync(queue: "Creation", durable: false, exclusive: false, autoDelete: false, arguments: null);
+        // read JSON directly from a file
+        using (var file = File.OpenText(@"C:\Users\thega\AppData\Roaming\StegoShard\request.json"))
+        using (var reader = new JsonTextReader(file))
+        {
+            var o2 = (JObject)JToken.ReadFrom(reader);
+            msg = o2.ToString();
+        }
+        var body = Encoding.UTF8.GetBytes(msg);
+        await channel.BasicPublishAsync("dispatch", txt_id.Text + ".start." + txt_container_id.Text, null);
+        dbg_log.AppendText("[INFO] Sending message to RabbitMQ...\n");
     }
 }

@@ -23,7 +23,7 @@ public class Deserializer
 
         switch (request)
         {
-            case "Crea    tion":
+            case "creation":
                 Worker._logger.LogWarning("Found type id for jobject " + cleanedJson.First);
                 var cleanClass = _creation(cleanedJson);
                 return cleanClass;

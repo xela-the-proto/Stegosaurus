@@ -9,5 +9,8 @@ public class ShardConfig
     public string Ip { get; set; }
     public string Username { get; set; }
     public string Password { get; set; }
+    
     public bool Broadcast { get; set; }
+    
+    public string ConnectionString { get; set; }
 }

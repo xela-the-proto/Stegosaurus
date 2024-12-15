@@ -54,7 +54,6 @@ public class GenerateID
                 return Task.FromResult(o2["ShardID"].ToString());
             }
         }
-
         return null;
     }
 }
