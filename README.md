@@ -1,4 +1,4 @@
-# Stegosaurus
+# Stegosaurus (UNDER MAJOR REWRITE)
 ## What is stegosaurus?
 Stegosaurus is a pterodactyl-like system that uses containers and rabbitmq to spin up servers on multiple nodes based on .NET
 ## How do i install it?
