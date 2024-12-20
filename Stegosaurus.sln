@@ -1,10 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stegosaurus.Shard", "Stegosaurus.Shard\Stegosaurus.Shard.csproj", "{4F490109-F4FB-4E3F-BF29-A806047D2277}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stegosaurus.Shard.old", "Stegosaurus.Shard.old\Stegosaurus.Shard.old.csproj", "{4F490109-F4FB-4E3F-BF29-A806047D2277}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stegosaurus.Dispatcher.Debug", "Stegosaurus.Dispatcher.Debug\Stegosaurus.Dispatcher.Debug.csproj", "{2D6E4B23-A6DF-4B2F-B8A8-875EA3B3927A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stegosaurus.Dispatcher.Main", "Stegosaurus.Dispatcher.Main\Stegosaurus.Dispatcher.Main.csproj", "{A43379A5-45BC-4FDF-9F19-E97FA5FBF557}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stegosaurus.Shard.Rewrite", "Stegosaurus.Shard.Rewrite\Stegosaurus.Shard.Rewrite.csproj", "{5AC18C71-5828-4E42-B95E-C0E08EE8FA81}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{950812B7-9F2F-462E-8B8B-4EFD05B62BF4}"
+	ProjectSection(SolutionItems) = preProject
+		compose.yaml = compose.yaml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,9 +25,9 @@ Global
 		{2D6E4B23-A6DF-4B2F-B8A8-875EA3B3927A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2D6E4B23-A6DF-4B2F-B8A8-875EA3B3927A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2D6E4B23-A6DF-4B2F-B8A8-875EA3B3927A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A43379A5-45BC-4FDF-9F19-E97FA5FBF557}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A43379A5-45BC-4FDF-9F19-E97FA5FBF557}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A43379A5-45BC-4FDF-9F19-E97FA5FBF557}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A43379A5-45BC-4FDF-9F19-E97FA5FBF557}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5AC18C71-5828-4E42-B95E-C0E08EE8FA81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AC18C71-5828-4E42-B95E-C0E08EE8FA81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AC18C71-5828-4E42-B95E-C0E08EE8FA81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AC18C71-5828-4E42-B95E-C0E08EE8FA81}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

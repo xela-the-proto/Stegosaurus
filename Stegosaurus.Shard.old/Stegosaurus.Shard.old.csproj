@@ -5,6 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <UserSecretsId>dotnet-Stegosaurus.Shard-B2BA0922-1664-40DB-BE77-C36FD689E675</UserSecretsId>
+        <RootNamespace>Stegosaurus.Shard</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -20,6 +21,7 @@
         <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0-preview.1" />
         <PackageReference Include="RabbitMQ.Client" Version="7.0.0" />
         <PackageReference Include="RandomDataGenerator.Net" Version="1.0.18" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
     </ItemGroup>
 
     <ItemGroup>
